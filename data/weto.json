@@ -1,0 +1,195 @@
+[
+ {
+  "id": "f14",
+  "fig": "1.4",
+  "wide": true,
+  "title": "Electrification by end-use sector, 1.5°C Scenario",
+  "sub": "% of sector energy use, 2023, 2035 and 2050",
+  "type": "line",
+  "unit": "%",
+  "categories": [
+   "2023",
+   "2035",
+   "2050"
+  ],
+  "series": [
+   {
+    "name": "Buildings",
+    "values": [
+     36,
+     57,
+     77
+    ],
+    "color": "#a9683b"
+   },
+   {
+    "name": "Industry",
+    "values": [
+     27,
+     34,
+     42
+    ],
+    "color": "#afca0b"
+   },
+   {
+    "name": "Transport",
+    "values": [
+     1,
+     15,
+     47
+    ],
+    "color": "#f39035"
+   },
+   {
+    "name": "Total final energy consumption",
+    "values": [
+     23,
+     35,
+     54
+    ],
+    "color": "#1476a7"
+   }
+  ],
+  "method": "Printed point labels from the PDF text layer."
+ },
+ {
+  "id": "f21",
+  "fig": "2.1",
+  "title": "Cumulative renewable investment by region",
+  "sub": "Cumulative investments of renewables for power generation under the 1.5°C Scenario, 2026-2050",
+  "type": "donut",
+  "unit": "USD trillion",
+  "categories": [
+   "North America",
+   "Europe",
+   "Rest of Asia",
+   "Central America/Caribbean",
+   "Middle East",
+   "ASEAN",
+   "South America",
+   "Africa",
+   "East Asia & Pacific"
+  ],
+  "series": [
+   {
+    "name": "Cumulative investment",
+    "colors": [
+     "#1476a7",
+     "#6bbdab",
+     "#f3913a",
+     "#fdc428",
+     "#d35079",
+     "#95c11f",
+     "#007d81",
+     "#976e46",
+     "#233861"
+    ],
+    "values": [
+     4.7,
+     5.9,
+     7.5,
+     0.2,
+     2.5,
+     2.5,
+     2.6,
+     3.2,
+     12.6
+    ]
+   }
+  ],
+  "center_value": "41.7",
+  "center_label": "USD trillion, nine regions sum",
+  "method": "printed data labels; the nine regional figures sum to the printed global total",
+  "note": "Nine regional tiles: 4.7 + 5.9 + 7.5 + 0.2 + 2.5 + 2.5 + 2.6 + 3.2 + 12.6 = 41.7, the printed Global."
+ },
+ {
+  "id": "f23a",
+  "fig": "2.3",
+  "title": "Electrification rate, building",
+  "sub": "Sectoral electrification rate for selected regions, Residential and commercial buildings, 2023, 2035 and 2050",
+  "yMax": 100,
+  "type": "grouped_bar",
+  "unit": "%",
+  "categories": [
+   "2023",
+   "2035",
+   "2050"
+  ],
+  "series": [
+   {
+    "name": "Global",
+    "color": "#1476a7",
+    "values": [
+     36.9,
+     58.9,
+     78.2
+    ]
+   },
+   {
+    "name": "G20",
+    "color": "#6bbdab",
+    "values": [
+     42,
+     61,
+     78.2
+    ]
+   },
+   {
+    "name": "Non G20",
+    "color": "#f3913a",
+    "values": [
+     24.6,
+     51.7,
+     77.2
+    ]
+   },
+   {
+    "name": "EU27",
+    "color": "#fdc428",
+    "values": [
+     36.9,
+     50.7,
+     60.9
+    ]
+   },
+   {
+    "name": "Africa",
+    "color": "#d35079",
+    "values": [
+     13.3,
+     42.4,
+     62.9
+    ]
+   },
+   {
+    "name": "South America",
+    "color": "#95c11f",
+    "values": [
+     53.3,
+     67.2,
+     93.4
+    ]
+   },
+   {
+    "name": "Central America",
+    "color": "#007d81",
+    "values": [
+     23.6,
+     45.5,
+     70.1
+    ]
+   },
+   {
+    "name": "ASEAN",
+    "color": "#233861",
+    "values": [
+     55.3,
+     75.5,
+     86.3
+    ]
+   }
+  ],
+  "note": "The panel axis is labelled to 80 percent but runs to 100. The bars for South America (93) and ASEAN (86) in the 2050 building panel are drawn above the last printed tick, so they are real, not misreads.",
+  "method": "vector geometry, one axis per panel; bars read as individual rectangles and scaled on that panel's printed 0-80% ticks"
+ }
+]

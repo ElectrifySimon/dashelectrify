@@ -1,0 +1,920 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DashElectrify - the 35-by-35 pledge in numbers</title>
+<meta name="description" content="Who has signed the COP31 35-by-35 global electrification pledge, and what their economies, electricity access and renewables look like.">
+<style>
+
+@font-face{font-family:"Instrument Sans";src:url(vendor/fonts/instrument-sans.woff2) format("woff2");
+  font-weight:400 700;font-style:normal;font-display:swap}
+@font-face{font-family:"Bricolage Grotesque";src:url(vendor/fonts/bricolage-grotesque.woff2) format("woff2");
+  font-weight:400 800;font-style:normal;font-display:swap}
+@font-face{font-family:Figtree;src:url(vendor/fonts/figtree-latin-400-normal.woff2) format("woff2");
+  font-weight:400;font-style:normal;font-display:swap;unicode-range:U+0000-00FF,U+0131,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215}
+@font-face{font-family:Figtree;src:url(vendor/fonts/figtree-latin-500-normal.woff2) format("woff2");
+  font-weight:500;font-style:normal;font-display:swap;unicode-range:U+0000-00FF,U+0131,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215}
+@font-face{font-family:Figtree;src:url(vendor/fonts/figtree-latin-600-normal.woff2) format("woff2");
+  font-weight:600;font-style:normal;font-display:swap;unicode-range:U+0000-00FF,U+0131,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215}
+@font-face{font-family:Figtree;src:url(vendor/fonts/figtree-latin-700-normal.woff2) format("woff2");
+  font-weight:700;font-style:normal;font-display:swap;unicode-range:U+0000-00FF,U+0131,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215}
+
+/* Astryx neutral theme tokens (MIT, @astryxdesign/theme-neutral 0.7.17).
+   Values copied from the package theme.css; the DashDist shell consumes them. */
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#070b13; --surface:#0d1522; --surface2:#131d2c; --line:#2a3a51;
+  --ink:#eef3fa; --muted:#93a4bc;
+  --accent:#4a8cff; --accent-fill:#2f6fe0; --accent-ink:#f4f8ff;
+  --accent2:#f0b45a;
+  --warn:#f0b45a; --bad:#ff8f8f;
+  --hi:rgba(255,255,255,.07); --wash-top:rgba(255,255,255,.055); --dot:rgba(255,255,255,.075);
+  --e1:inset 0 1px 0 var(--hi),0 1px 2px rgba(0,0,0,.40);
+  --e2:inset 0 1px 0 var(--hi),0 2px 4px rgba(0,0,0,.35),0 14px 34px rgba(0,0,0,.40);
+  --e3:inset 0 1px 0 var(--hi),0 10px 20px rgba(0,0,0,.40),0 30px 70px rgba(0,0,0,.55);
+  --shadow:var(--e2);
+}
+:root[data-theme="light"]{
+  color-scheme:light;
+  --bg:#f2f5fa; --surface:#ffffff; --surface2:#e6ecf5; --line:#d3dce9;
+  --ink:#0a1421; --muted:#4b5b71;
+  --accent:#1b4fd0; --accent-fill:#1b4fd0; --accent-ink:#ffffff;
+  --accent2:#a26a12;
+  --warn:#8a5b00; --bad:#c0262c;
+  --hi:rgba(255,255,255,.90); --wash-top:rgba(255,255,255,.65); --dot:rgba(20,30,40,.10);
+  --e1:inset 0 1px 0 var(--hi),0 1px 2px rgba(16,24,32,.08);
+  --e2:inset 0 1px 0 var(--hi),0 2px 4px rgba(16,24,32,.06),0 14px 34px rgba(16,24,32,.10);
+  --e3:inset 0 1px 0 var(--hi),0 10px 20px rgba(16,24,32,.10),0 30px 70px rgba(16,24,32,.16);
+  --shadow:var(--e2);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(1100px 460px at 18% -12%, color-mix(in srgb,var(--accent) 12%, transparent), transparent 72%)}
+.wrap{position:relative;z-index:1}
+body{background-color:var(--bg);background-image:radial-gradient(1200px 620px at 50% -12%,var(--wash-top),transparent 65%);background-attachment:fixed;color:var(--ink);
+  font-family:"Instrument Sans",Figtree,-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif;
+  font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;
+  transition:background var(--d-ui) var(--e-out),color var(--d-ui) var(--e-out)}
+.wrap{max-width:1440px;margin:0 auto;padding:clamp(16px,3vw,32px) clamp(12px,3vw,24px) 64px}
+.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+/* masthead */
+.masthead{display:grid;grid-template-columns:1fr auto;gap:12px 24px;align-items:start;padding-bottom:20px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:flex-start;gap:12px}
+.brand-text{display:flex;flex-direction:column;gap:4px}
+.brand-text h1{line-height:1.15}
+.subtitle{margin:0;font-size:13px;line-height:1.45;color:var(--muted);max-width:62ch}
+.mark{width:34px;height:34px;border-radius:10px;background:var(--accent);color:var(--accent-ink);
+  display:grid;place-items:center;font-weight:700;font-size:13px;letter-spacing:.5px}
+h1{margin:0;font-size:clamp(21px,2.2vw,27px);font-weight:600;letter-spacing:-.02em;font-family:"Bricolage Grotesque","Instrument Sans",sans-serif}
+.lede{margin:8px 0 0;grid-column:1/-1;max-width:70ch;color:var(--muted);font-size:14.5px}
+.footmeta{display:flex;flex-wrap:wrap;gap:4px 20px;color:var(--muted);font-size:12px;margin:0 0 16px;
+  padding-bottom:14px;border-bottom:1px solid var(--line)}
+.footmeta b{color:var(--ink);font-weight:600}
+.meta span{display:inline-flex;align-items:center;gap:6px}
+.meta b{color:var(--ink);font-weight:600}
+.themebtn{grid-row:1;grid-column:2;justify-self:end;display:inline-flex;align-items:center;gap:8px;
+  background:var(--surface);border:0;box-shadow:var(--e1);color:var(--ink);border-radius:10px;
+  padding:0 14px;min-height:44px;font-size:13px;cursor:pointer}
+.themebtn:hover{border-color:var(--accent);color:var(--accent)}
+
+/* kpis */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:10px;margin:24px 0}
+.kpi{background:var(--surface);background-image:linear-gradient(180deg,var(--hi),transparent 55%);border:0;border-radius:14px;
+  padding:16px 16px 16px;position:relative;box-shadow:var(--e2);transition:transform var(--d-ui) var(--e-out),box-shadow var(--d-ui) var(--e-out)}
+.kpi .u{font-size:.62em;font-weight:600;color:var(--muted);margin-left:1px}
+.spark{display:block;width:100%;height:26px;margin-top:11px;color:var(--accent);opacity:.62}
+.kpi .n{font-size:clamp(21px,2.3vw,26px);font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums;
+  font-feature-settings:"tnum" 1,"cv05" 1}
+.kpi .l{font-size:12px;color:var(--muted);margin-top:5px}
+
+/* map */
+.mapblock{margin-top:10px;position:relative}
+.mapbar{position:absolute;top:14px;left:14px;z-index:3;display:flex;flex-wrap:wrap;gap:8px;align-items:center;
+  margin:0;padding:7px;border-radius:14px;border:1px solid color-mix(in srgb,var(--line) 45%, transparent);
+  background:color-mix(in srgb,var(--surface) 76%, transparent);
+  -webkit-backdrop-filter:blur(16px) saturate(1.3);backdrop-filter:blur(16px) saturate(1.3);
+  box-shadow:var(--e3);max-width:calc(100% - 24px)}
+.seg{display:flex;gap:2px;padding:2px;border-radius:10px;background:color-mix(in srgb,var(--ink) 4%, transparent)}
+.seg button{background:transparent;box-shadow:none;border:0;border-radius:8px;color:var(--muted);padding:0 12px;min-height:32px;font-size:12.5px;cursor:pointer;transition:color var(--d-feedback) var(--e-out),background var(--d-feedback) var(--e-out)}
+.seg button.on{background:var(--accent);color:var(--accent-ink);font-weight:650}
+select,input[type=search],.btn{background:var(--surface);border:0;box-shadow:var(--e1);color:var(--ink);
+  border-radius:10px;padding:0 14px;font-size:14px;min-height:44px;outline:none;font-family:inherit}
+select{cursor:pointer;max-width:100%}
+.btn{cursor:pointer;display:inline-flex;align-items:center;gap:8px;justify-content:center}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);font-weight:600;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 2px 6px rgba(0,0,0,.35)}
+.btn.primary:hover{filter:brightness(1.05);color:var(--accent-ink)}
+#map{height:clamp(420px,64vh,720px);border:1px solid color-mix(in srgb,var(--line) 55%, transparent);
+  border-radius:16px;overflow:hidden;position:relative;background:var(--surface);box-shadow:var(--e2)}
+.mapnote,.legend{position:absolute;z-index:2;background:color-mix(in srgb,var(--surface) 80%, transparent);
+  -webkit-backdrop-filter:blur(14px) saturate(1.2);backdrop-filter:blur(14px) saturate(1.2);
+  border:1px solid color-mix(in srgb,var(--line) 45%, transparent);border-radius:12px;
+  padding:10px 12px;font-size:12px;color:var(--muted);box-shadow:var(--e2);
+  max-width:min(58ch,72%)}
+.mapnote{left:12px;bottom:12px}
+.legend{right:12px;bottom:12px;min-width:190px}
+.legend .lg-t{color:var(--ink);font-weight:600;font-size:12px;margin-bottom:6px}
+.legend .lg-bar{height:8px;border-radius:5px;margin:0 0 4px}
+.legend .lg-r{display:flex;justify-content:space-between;font-size:11px;font-variant-numeric:tabular-nums}
+.legend .lg-k{display:flex;align-items:center;gap:7px;margin-top:7px;font-size:11px}
+.legend .lg-k i{width:16px;height:3px;border-radius:2px;display:inline-block}
+#panel{position:absolute;top:12px;right:12px;z-index:3;width:min(280px,calc(100% - 24px));
+  background:var(--surface);border:0;
+  border-radius:12px;padding:16px;font-size:13px;display:none;box-shadow:var(--e3)}
+#panel h3{margin:0 0 10px;font-size:15px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+#panel .x{border:0;background:transparent;color:var(--muted);cursor:pointer;font-size:16px;line-height:1;padding:4px}
+#panel .row{display:flex;justify-content:space-between;gap:12px;padding:5px 0;border-bottom:1px solid var(--line)}
+#panel .row:last-child{border:0}
+#panel .k{color:var(--muted)}
+#panel .v{font-variant-numeric:tabular-nums;font-weight:550}
+
+/* filters + tabs */
+.controls{display:flex;flex-wrap:wrap;gap:8px;margin:24px 0 14px;align-items:center}
+input[type=search]{flex:1 1 220px;min-width:0}
+input[type=search]:focus,select:focus{border-color:var(--accent)}
+.count{color:var(--muted);font-size:12.5px;margin-left:auto;white-space:nowrap}
+.tabs{display:flex;gap:26px;margin:0 0 18px;overflow-x:auto;scrollbar-width:none;
+  border-bottom:1px solid var(--line)}
+.tabs::-webkit-scrollbar{display:none}
+.tabs .tab{border-radius:0}
+.tab{background:none;box-shadow:none;border:0;border-bottom:2px solid transparent;border-radius:0;
+  color:var(--muted);white-space:nowrap;margin-bottom:-1px;
+  padding:0 15px;min-height:44px;display:inline-flex;align-items:center;border-radius:10px;font-size:13px;cursor:pointer;
+  transition:background var(--d-feedback) var(--e-out),color var(--d-feedback) var(--e-out),border-color var(--d-feedback) var(--e-out),transform 90ms var(--e-out)}
+.tab[aria-selected="true"]{background:none;color:var(--ink);font-weight:600;
+  border-bottom-color:var(--accent);box-shadow:none}
+.tab:hover{color:var(--ink)}
+.tab:active{transform:scale(.97)}
+
+/* table */
+.tblwrap{background:var(--surface);border:0;border-radius:12px;overflow:auto;
+  box-shadow:var(--e2);max-height:min(68vh,760px)}
+table{width:100%;border-collapse:separate;border-spacing:0;font-size:13px;white-space:nowrap}
+caption{text-align:left;padding:14px 16px 4px;color:var(--muted);font-size:12.5px}
+th,td{padding:10px 14px;text-align:right;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+th:first-child,td:first-child,th:nth-child(2),td:nth-child(2){text-align:left}
+thead th{position:sticky;top:0;z-index:1;background:var(--surface2);color:var(--muted);font-weight:600;
+  font-size:11.5px;letter-spacing:0;cursor:pointer;user-select:none}
+thead th:hover{color:var(--ink)}
+thead th .ar{opacity:.45;font-size:9px;margin-left:5px}
+thead th[aria-sort] .ar{opacity:1;color:var(--accent)}
+tbody tr{cursor:pointer}
+tbody tr:hover td{background:var(--surface2)}
+tbody tr:hover td:first-child{box-shadow:inset 2px 0 0 var(--accent)}
+td.name{font-weight:550}
+td:first-child{position:sticky;left:0;background:var(--surface);z-index:1}
+tbody tr:hover td:first-child{background:var(--surface2)}
+.na{color:var(--muted);font-weight:400}
+.bad{color:var(--bad);font-weight:600}
+.warn{color:var(--warn);font-weight:600}
+
+/* charts */
+.charts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:14px;margin:4px 0 8px}
+.card{background:var(--surface);background-image:linear-gradient(180deg,var(--hi),transparent 60%);
+  border:1px solid color-mix(in srgb,var(--line) 45%, transparent);border-radius:14px;
+  padding:16px 16px 10px;box-shadow:var(--e2)}
+.card h3{margin:0;font-size:13.5px;font-weight:600;letter-spacing:.01em;display:flex;align-items:center;gap:8px}
+.card h3::before{content:"";width:3px;height:12px;border-radius:2px;background:var(--accent);flex:none}
+.card p{margin:3px 0 10px;font-size:12px;color:var(--muted)}
+.card .plot{width:100%;height:300px}
+.card.wide{grid-column:1/-1}
+.card.wide .plot{height:420px}
+.card .note{font-size:11.5px;color:var(--muted);margin:6px 0 2px;min-height:16px}
+
+/* footer */
+.foot{margin-top:32px;padding-top:20px;border-top:1px solid var(--line);color:var(--muted);font-size:12.5px;line-height:1.65}
+.footgrid{display:grid;grid-template-columns:1.4fr 1fr 1fr .9fr;gap:32px}
+.footgrid section{min-width:0}
+@media(max-width:980px){.footgrid{grid-template-columns:1fr 1fr}}
+@media(max-width:620px){.footgrid{grid-template-columns:1fr;gap:20px}}
+.foot h2{font-size:12px;font-weight:600;margin:0 0 8px;color:var(--ink);letter-spacing:0}
+.foot p{margin:0 0 8px}
+.foot ul{margin:0 0 10px;padding-left:18px}
+.foot li{margin:2px 0}
+.foot a{color:var(--accent);text-decoration:underline;text-underline-offset:2px;text-decoration-thickness:1px}
+.foot a:hover{text-decoration-thickness:2px}
+
+/* gate */
+#lock{max-width:370px;margin:16vh auto;background:var(--surface);border:0;
+  border-radius:12px;padding:28px;box-shadow:var(--shadow)}
+#lock h2{margin:0 0 6px;font-size:19px}
+#lock p{margin:0 0 16px;color:var(--muted);font-size:13px}
+#lock input{width:100%;margin-bottom:10px;background:var(--bg);border:1px solid var(--line);
+  color:var(--ink);border-radius:10px;padding:12px;font-size:16px}
+#lock button{width:100%;background:var(--accent);border:0;color:var(--accent-ink);font-weight:650;
+  padding:12px;border-radius:10px;font-size:15px;cursor:pointer;min-height:44px}
+#err{color:var(--bad);font-size:12px;min-height:16px;margin-top:8px}
+
+/* motion */
+:root{--e-out:cubic-bezier(.16,1,.3,1);--e-in:cubic-bezier(.7,0,.84,0);--e-io:cubic-bezier(.65,0,.35,1);
+  --d-feedback:120ms;--d-ui:220ms;--d-panel:320ms}
+.kpi{animation:kpi-in 420ms var(--e-out) both;transition:transform var(--d-ui) var(--e-out),border-color var(--d-ui) var(--e-out)}
+.kpi:hover{transform:translateY(-2px);box-shadow:var(--e3)}
+.kpi:nth-child(2){animation-delay:40ms}.kpi:nth-child(3){animation-delay:80ms}
+.kpi:nth-child(4){animation-delay:120ms}.kpi:nth-child(5){animation-delay:160ms}
+@keyframes kpi-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.btn,.tab,.seg button,.themebtn{transition:background var(--d-feedback) var(--e-out),color var(--d-feedback) var(--e-out),
+  border-color var(--d-feedback) var(--e-out),transform 90ms var(--e-out)}
+.btn:active,.tab:active,.seg button:active,.themebtn:active{transform:scale(.97);box-shadow:var(--e1)}
+.card{animation:card-in var(--d-panel) var(--e-out) both}
+@keyframes card-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+#panel{animation:panel-in var(--d-panel) var(--e-out) both}
+@keyframes panel-in{from{opacity:0;transform:scale(.97) translateY(-4px)}to{opacity:1;transform:none}}
+#tbody.enter tr{animation:rows-in 260ms var(--e-out) both}
+#tbody.enter tr:nth-child(-n+8){animation-delay:calc(var(--i,0)*28ms)}
+@keyframes rows-in{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+#lock.shake{animation:shake 300ms var(--e-io)}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(6px)}
+  60%{transform:translateX(-4px)}80%{transform:translateX(3px)}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:10px}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.masthead{animation:rise var(--d-panel) var(--e-out) both}
+.kpi{animation:rise var(--d-ui) var(--e-out) both;animation-delay:calc(var(--i,0) * 30ms)}
+#map{animation:rise 380ms var(--e-out) 140ms both}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+svg.ic{width:16px;height:16px;flex:0 0 auto;fill:none;stroke:currentColor;stroke-width:1.75;
+  stroke-linecap:round;stroke-linejoin:round;vertical-align:-2px}
+.tab svg.ic,.btn svg.ic{margin-right:7px}
+.tab svg.ic{width:15px;height:15px;opacity:.9}
+.kpi .l svg.ic{width:14px;height:14px;margin-right:6px;vertical-align:-2px;opacity:.85}
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:radial-gradient(circle at 1px 1px,var(--dot) 1px,transparent 1.6px);
+  background-size:24px 24px;
+  -webkit-mask-image:linear-gradient(180deg,rgba(0,0,0,.9),rgba(0,0,0,.25) 55%,transparent 88%);
+  mask-image:linear-gradient(180deg,rgba(0,0,0,.9),rgba(0,0,0,.25) 55%,transparent 88%)}
+.wrap{position:relative;z-index:1}
+input[type=search]::placeholder{color:var(--muted);opacity:1}
+[hidden]{display:none!important}
+
+@media(max-width:820px){
+  .masthead{grid-template-columns:1fr auto}
+  .kpis{grid-template-columns:repeat(auto-fit,minmax(140px,1fr))}
+  .card .plot{height:260px}
+  .card.wide .plot{height:340px}
+  .mapnote{max-width:calc(100% - 24px);bottom:12px}
+  .legend{right:12px;top:12px;bottom:auto;min-width:160px}
+  #panel{top:auto;bottom:12px;right:12px}
+}
+@media(max-width:560px){
+  body{font-size:14px}
+  .wrap{padding:14px 10px 48px}
+  .kpi{padding:14px 12px}
+  .count{margin-left:0;flex:1 1 100%}
+  .tabs{gap:6px}
+  .seg button{padding:0 12px}
+}
+
+/* ---- v2 surface: graphite and mint. Overrides only; structure untouched. ---- */
+:root[data-theme="dark"]{
+  --bg:#070b13; --surface:#0d1522; --surface2:#131d2c; --line:#26364b;
+  --ink:#eef3fa; --muted:#93a4bc;
+  --accent:#4a8cff; --accent-fill:#2f6fe0; --accent-ink:#f4f8ff;
+  --accent2:#f0b45a;
+  --warn:#f0b45a; --bad:#ff8f8f;
+  --wash-top:rgba(255,255,255,.03); --dot:rgba(255,255,255,.05);
+  --e1:0 1px 2px rgba(0,0,0,.55);
+  --e2:0 10px 30px -8px rgba(0,0,0,.65);
+  --e3:0 24px 60px -14px rgba(0,0,0,.8);
+}
+:root[data-theme="light"]{
+  --bg:#f2f5fa; --surface:#ffffff; --surface2:#e8eef7; --line:#d5deea;
+  --ink:#0a1421; --muted:#4b5b71;
+  --accent:#1b4fd0; --accent-fill:#1b4fd0; --accent-ink:#ffffff;
+  --accent2:#a26a12;
+  --wash-top:rgba(255,255,255,.7); --dot:rgba(16,26,24,.07);
+  --e1:0 1px 2px rgba(16,26,24,.07);
+  --e2:0 10px 26px -12px rgba(16,26,24,.20);
+  --e3:0 24px 60px -18px rgba(16,26,24,.28);
+}
+body::after{content:"";position:fixed;top:0;left:0;right:0;height:2px;z-index:5;
+  background:linear-gradient(90deg,var(--accent),color-mix(in srgb,var(--accent) 35%,transparent) 55%,transparent)}
+body{font-size:15px}
+.wrap{padding-top:clamp(20px,3.2vw,36px)}
+.brand-text h1{font-size:clamp(26px,3.1vw,34px);font-weight:700;letter-spacing:-.022em}
+.subtitle{font-size:13.5px;color:var(--muted);max-width:66ch}
+.mark{width:38px;height:38px;border-radius:12px;font-size:14px;letter-spacing:.02em}
+.masthead{padding-bottom:22px;border-bottom:1px solid color-mix(in srgb,var(--line) 80%,transparent)}
+.kpi{background:var(--surface);border:1px solid color-mix(in srgb,var(--line) 85%,transparent);
+  border-radius:16px;padding:18px 18px 16px;box-shadow:none}
+.kpi:hover{box-shadow:var(--e2)}
+.kpi .n{font-size:clamp(28px,3vw,36px);font-weight:650;letter-spacing:-.03em;line-height:1.05;
+  font-variant-numeric:tabular-nums}
+.kpi .l{font-size:12.5px;color:var(--muted)}
+.card{background:var(--surface);border:1px solid color-mix(in srgb,var(--line) 85%,transparent);
+  border-radius:16px;padding:18px 18px 12px;box-shadow:none}
+.card h3{font-size:14px;letter-spacing:-.01em}
+.tabs{gap:30px;margin:6px 0 20px;border-bottom:1px solid color-mix(in srgb,var(--line) 80%,transparent)}
+.tab{font-size:13.5px;padding:0 1px 12px;min-height:42px}
+#map{border-radius:18px}
+.mapbar{border-radius:14px}
+thead th{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+tbody td{font-variant-numeric:tabular-nums}
+.seg button.on{background:var(--accent);color:var(--accent-ink)}
+
+
+.legend{padding:12px 13px;min-width:210px}
+.lg-t{font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin-bottom:9px;font-weight:600}
+.lg-bar{height:8px;border-radius:99px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.10)}
+.lg-r{display:flex;justify-content:space-between;margin-top:6px;font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+.lg-k{display:flex;align-items:center;gap:7px;font-size:11.5px;color:var(--muted);margin-top:8px}
+.lg-k i{width:8px;height:8px;border-radius:2px;flex:none}
+.lg-k:first-of-type{margin-top:12px;padding-top:10px;border-top:1px solid color-mix(in srgb,var(--line) 70%,transparent)}
+.mapnote{font-size:11px;max-width:min(46ch,58%);opacity:.9}
+.maplibregl-ctrl-attrib{background:transparent!important;font-size:10px!important;opacity:.55}
+.maplibregl-ctrl-attrib a{color:var(--muted)!important}
+
+.mapbar{background:rgba(10,12,13,.72);border:1px solid rgba(255,255,255,.07);box-shadow:var(--e3)}
+:root[data-theme="light"] .mapbar{background:rgba(255,255,255,.78);border-color:rgba(16,26,24,.10)}
+.seg button.on{background:color-mix(in srgb,var(--accent) 16%,transparent);color:var(--accent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--accent) 28%,transparent)}
+:root[data-theme="light"] .seg button.on{background:color-mix(in srgb,var(--accent) 10%,transparent);color:var(--accent)}
+.kpi .l{font-size:13.5px;color:color-mix(in srgb,var(--ink) 74%,transparent);gap:8px}
+.legend{bottom:14px;right:14px}
+.mapnote{left:14px;bottom:14px}
+
+.legend{background:rgba(12,15,17,.93);border:1px solid rgba(255,255,255,.12);box-shadow:var(--e3)}
+:root[data-theme="light"] .legend{background:rgba(255,255,255,.95);border-color:rgba(16,26,24,.14)}
+.lg-t{color:color-mix(in srgb,var(--ink) 82%,transparent)}
+
+#c-map{height:clamp(420px,62vh,700px);padding:10px 0;border:1px solid color-mix(in srgb,var(--line) 55%,transparent);border-radius:16px;overflow:hidden;background:var(--surface);box-shadow:var(--e2)}
+#bgfx{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.9}
+#grain{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.045;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='160' height='160' filter='url(%23n)' opacity='0.55'/></svg>");
+  background-size:160px 160px}
+:root[data-theme="light"] #grain{opacity:.085;mix-blend-mode:multiply}
+@media(prefers-reduced-motion:reduce){#bgfx{opacity:.75}}
+
+/* ---- DashElectrify additions ---- */
+.kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+@media(max-width:1100px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.kpi .sub2{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.35}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;padding:6px 10px;border-radius:99px;
+  border:1px solid color-mix(in srgb,var(--line) 80%,transparent);background:transparent;color:var(--muted);cursor:pointer}
+.chip[aria-pressed="true"]{color:var(--ink);border-color:color-mix(in srgb,var(--accent) 55%,transparent);
+  background:color-mix(in srgb,var(--accent) 12%,transparent)}
+.chip i{width:8px;height:8px;border-radius:2px}
+.maptip{position:absolute;z-index:4;pointer-events:none;padding:10px 12px;border-radius:12px;
+  background:rgba(12,15,17,.95);border:1px solid rgba(255,255,255,.12);box-shadow:var(--e3);
+  font-size:12.5px;line-height:1.5;color:#e9efec;min-width:170px;display:none}
+.maptip b{font-size:13.5px;display:block;margin-bottom:4px}
+.maptip .r{display:flex;justify-content:space-between;gap:14px;color:#9fb0ac}
+.maptip .r span:last-child{color:#e9efec;font-variant-numeric:tabular-nums}
+.chartgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media(max-width:980px){.chartgrid{grid-template-columns:1fr}}
+.card .cv{width:100%;height:320px}
+.card .cv.tall{height:380px}
+.card p.note{font-size:12px;color:var(--muted);margin:2px 0 8px}
+
+#c-map svg{width:100%;height:100%;display:block}
+#c-map .cty{transition:opacity .18s ease,filter .18s ease;cursor:pointer}
+#c-map .cty:hover{filter:brightness(1.25)}
+#c-map .cty.dim{opacity:.18}
+#c-map .dot{pointer-events:all}
+.mapwrap{position:relative}
+.mapwrap .legend{left:16px;right:auto;bottom:16px;background:rgba(10,14,22,.92);border:1px solid rgba(255,255,255,.12);
+  border-radius:12px;padding:10px 12px;backdrop-filter:blur(8px)}
+:root[data-theme="light"] .mapwrap .legend{background:rgba(255,255,255,.95);border-color:rgba(12,24,40,.12)}
+.mapwrap .mapnote{right:16px;left:auto;bottom:16px;max-width:320px;text-align:right;font-size:11.5px;opacity:.75}
+.lg-k{display:flex;align-items:center;gap:7px;margin-top:5px;font-size:12px;color:var(--ink)}
+.lg-k i{width:11px;height:11px;border-radius:3px;display:inline-block}
+.lg-t{font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.mapwrap .legend .lg-k i{width:11px;height:11px;border-radius:3px}
+.mapwrap .legend .lg-k{font-size:12px;color:var(--ink);margin-top:6px}
+.mapwrap .legend .lg-t{color:var(--muted);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}
+</style>
+</head>
+<body>
+<canvas id="bgfx" aria-hidden="true"></canvas>
+<div id="grain" aria-hidden="true"></div>
+
+<div class="wrap" id="app">
+  <header class="masthead">
+    <div class="brand"><span class="mark" aria-hidden="true">DE</span>
+      <div class="brand-text">
+        <h1>DashElectrify</h1>
+        <p class="subtitle">The COP31 35-by-35 electrification pledge, country by country</p>
+      </div>
+    </div>
+    <div class="masthead-right">
+      <button class="iconbtn" id="theme" aria-label="Switch theme" title="Switch theme"><svg class="ic"><use href="#i-sun"></use></svg></button>
+    </div>
+  </header>
+
+  <section class="kpis" id="kpis" aria-label="Headline numbers"></section>
+
+  <section class="mapwrap" aria-label="World map of pledge signatories">
+    <div id="c-map"></div>
+    <div class="mapbar" role="toolbar" aria-label="Map filters">
+      <div class="seg" role="group" aria-label="Pledge status">
+        <button data-f="all" class="on">All</button>
+        <button data-f="signed">Signed</button>
+        <button data-f="eu">EU</button>
+        <button data-f="none">Outside</button>
+      </div>
+    </div>
+    <div class="legend" id="legend"></div>
+    <div class="maptip" id="maptip"></div>
+    <div class="mapnote" id="mapnote">Hover a country for economy, access and renewables. Click to pin it in the table.</div>
+  </section>
+
+  <nav class="tabs" role="tablist" aria-label="Views">
+    <button class="tab on" id="tab-econ" role="tab" aria-selected="true" aria-controls="econ">Economics</button>
+    <button class="tab" id="tab-access" role="tab" aria-selected="false" aria-controls="access">Electricity access</button>
+    <button class="tab" id="tab-renew" role="tab" aria-selected="false" aria-controls="renew">Renewables</button>
+    <button class="tab" id="tab-weto" role="tab" aria-selected="false" aria-controls="weto">WETO pathways</button>
+    <button class="tab" id="tab-table" role="tab" aria-selected="false" aria-controls="tblwrap">Table</button>
+  </nav>
+
+  <section id="econ" class="charts" role="tabpanel" aria-labelledby="tab-econ" tabindex="0">
+    <div class="chartgrid">
+      <div class="card"><h3>Income and access move together</h3><p class="note">GDP per capita, log scale, against the share of people with electricity. Bubble area is population. Signatories in mint.</p><div class="cv" id="c-scatter"></div></div>
+      <div class="card"><h3>What the signatories weigh</h3><p class="note">Share of world population and world GDP covered by the pledge, against the rest.</p><div class="cv" id="c-weight"></div></div>
+      <div class="card"><h3>GDP per capita by pledge status</h3><p class="note">Median, with the interquartile range as a band.</p><div class="cv" id="c-gdpstat"></div></div>
+      <div class="card"><h3>Population and income, top signatories</h3><p class="note">The fifteen largest signatory economies.</p><div class="cv" id="c-topsign"></div></div>
+    </div>
+  </section>
+
+  <section id="access" class="charts" role="tabpanel" aria-labelledby="tab-access" tabindex="0" hidden>
+    <div class="chartgrid">
+      <div class="card"><h3>Where the unserved live</h3><p class="note">People without electricity, fifteen largest. Mint means the country has signed.</p><div class="cv tall" id="c-unserved"></div></div>
+      <div class="card"><h3>World access has climbed, slowly</h3><p class="note">Population-weighted access rate, World Bank series.</p><div class="cv tall" id="c-trend"></div></div>
+      <div class="card"><h3>The rural gap</h3><p class="note">National, urban and rural access for twenty signatories with the widest rural gap.</p><div class="cv" id="c-rural"></div></div>
+      <div class="card"><h3>Access distribution</h3><p class="note">How many countries sit in each access band, signed against not signed.</p><div class="cv" id="c-bands"></div></div>
+    </div>
+  </section>
+
+  <section id="renew" class="charts" role="tabpanel" aria-labelledby="tab-renew" tabindex="0" hidden>
+    <div class="chartgrid">
+      <div class="card"><h3>Renewables in final energy</h3><p class="note">Share of final energy consumption from renewables, fifteen leaders.</p><div class="cv tall" id="c-renewsign"></div></div>
+      <div class="card"><h3>Renewable electricity share</h3><p class="note">Median by pledge status, latest year.</p><div class="cv tall" id="c-renelec"></div></div>
+      <div class="card"><h3>Renewables against access</h3><p class="note">Renewable electricity share against access rate. Signatories in mint.</p><div class="cv" id="c-renscatter"></div></div>
+      <div class="card"><h3>Where the pledge adds most</h3><p class="note">Signatories with the lowest renewable share in final energy.</p><div class="cv" id="c-renlag"></div></div>
+    </div>
+  </section>
+
+  <section id="weto" class="charts" role="tabpanel" aria-labelledby="tab-weto" tabindex="0" hidden>
+    <div class="chartgrid">
+      <div class="card"><h3>Electrification by end use</h3><p class="note">IRENA WETO 2026, 1.5C Scenario, share of each sector running on electricity.</p><div class="cv" id="c-weto-line"></div></div>
+      <div class="card"><h3>Electrification rate, buildings</h3><p class="note">IRENA WETO 2026. Global, G20, non-G20 and regions.</p><div class="cv" id="c-weto-bar"></div></div>
+      <div class="card"><h3>Cumulative renewable investment by region</h3><p class="note">IRENA WETO 2026, USD trillion. The nine regions sum to the printed global 41.7.</p><div class="cv tall" id="c-weto-donut"></div></div>
+      <div class="card"><h3>Transport electrification is the steep one</h3><p class="note">From 1 percent in 2023 to 47 percent in 2050 under the 1.5C pathway.</p><div class="cv" id="c-weto-transport"></div></div>
+    </div>
+  </section>
+
+  <div class="tblwrap" id="tblwrap" role="tabpanel" aria-labelledby="tab-table" tabindex="0" hidden>
+    <table id="tbl">
+      <caption id="cap">Every country with a pledge status or a World Bank record. Click a header to sort.</caption>
+      <thead id="thead"></thead><tbody id="tbody"></tbody>
+    </table>
+  </div>
+
+  <footer class="foot" id="foot"></footer>
+</div>
+
+<script src="vendor/echarts.min.js"></script>
+<script src="data.js"></script>
+<script type="module">
+const DATA = window.ELECTRIFY_DATA || {countries:{},agg:{},access_series:{}};
+const C = DATA.countries, AGG = DATA.agg, SER = DATA.access_series || {};
+const ROWS = Object.entries(C).map(([iso, v]) => Object.assign({iso}, v));
+const cssVar = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const $ = s => document.querySelector(s);
+
+const fmtInt = n => n == null ? "-" : Math.round(n).toLocaleString("en-US");
+const fmtMil = n => n == null ? "-" : (n >= 1e9 ? (n / 1e9).toFixed(2) + "bn" : n >= 1e6 ? (n / 1e6).toFixed(n >= 1e8 ? 0 : 1) + "m" : fmtInt(n));
+const fmtPct = (n, d = 1) => n == null ? "-" : n.toFixed(d) + "%";
+const fmtUsd = n => n == null ? "-" : n >= 1e12 ? "$" + (n / 1e12).toFixed(1) + "tn" : n >= 1e9 ? "$" + (n / 1e9).toFixed(0) + "bn" : "$" + fmtInt(n);
+const statusOf = v => v.pledge === "signed" ? (v.pledge_source === "eu" ? "eu" : "national") : "none";
+const median = a => { if (!a.length) return null; const s = [...a].sort((x, y) => x - y); const m = s.length >> 1; return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; };
+const q = (a, p) => { if (!a.length) return null; const s = [...a].sort((x, y) => x - y); const i = (s.length - 1) * p, lo = Math.floor(i), hi = Math.ceil(i); return s[lo] + (s[hi] - s[lo]) * (i - lo); };
+
+/* ------------------------------------------------------------------ KPIs */
+function buildKpis() {
+  const popShare = AGG.share_pop, gdpShare = AGG.share_gdp;
+  const cards = [
+    ["Signatories", fmtInt(AGG.total_signed + 1), "60 national endorsements, 24 EU member states, plus the EU entry the sheet counts once"],
+    ["People covered", fmtMil(AGG.pop_signed), fmtPct(popShare * 100, 1) + " of the world population"],
+    ["Economies covered", fmtUsd(AGG.gdp_signed), fmtPct(gdpShare * 100, 1) + " of world GDP, current USD"],
+    ["Without electricity", fmtMil(AGG.unserved_signed), "inside the signatory countries, " + fmtPct(AGG.unserved_signed / AGG.unserved_world * 100, 0) + " of the global unserved"],
+    ["Likely or considering", "31", "11 likely, 20 considering, as the tracker records them"],
+  ];
+  $("#kpis").innerHTML = cards.map(([l, n, s]) =>
+    `<div class="kpi"><div class="l">${l}</div><div class="n">${n}</div><div class="sub2">${s}</div></div>`).join("");
+}
+
+/* ------------------------------------------------------------------- map */
+let FILTER = "all";
+const MAPID = "c-map";
+const MW = 1000, MH = 500, LAT_TOP = 84, LAT_BOT = -58;
+
+const statusColor = st => st === "national" ? cssVar("--accent") : st === "eu" ? cssVar("--accent2")
+  : (document.documentElement.dataset.theme === "light" ? "#dbe3ee" : "#20304a");
+
+const px = lon => (lon + 180) / 360 * MW;
+const py = lat => (LAT_TOP - Math.max(LAT_BOT, Math.min(LAT_TOP, lat))) / (LAT_TOP - LAT_BOT) * MH;
+
+function ringPath(ring) {
+  return ring.map((c, i) => (i ? "L" : "M") + px(c[0]).toFixed(1) + " " + py(c[1]).toFixed(1)).join(" ") + "Z";
+}
+function geoPath(geom) {
+  if (!geom) return "";
+  if (geom.type === "Polygon") return geom.coordinates.map(ringPath).join(" ");
+  if (geom.type === "MultiPolygon") return geom.coordinates.map(p => p.map(ringPath).join(" ")).join(" ");
+  return "";
+}
+
+function drawMap() {
+  const host = document.getElementById(MAPID);
+  if (!host) return;
+  const parts = [];
+  for (const f of window.__GEO__.features) {
+    const iso = (f.properties.iso || "").toUpperCase();
+    const v = C[iso];
+    const st = v ? statusOf(v) : "none";
+    const dim = FILTER === "all" ? false : FILTER === "signed" ? st !== "national" : FILTER === "eu" ? st !== "eu" : st !== "none";
+    parts.push(`<path class="cty${dim ? " dim" : ""}" data-iso="${iso}" d="${geoPath(f.geometry)}"
+      fill="${statusColor(st)}" stroke="rgba(255,255,255,.13)" stroke-width=".5"></path>`);
+  }
+  const dots = ROWS.filter(v => v.dot && v.pledge === "signed" && (FILTER === "all" || FILTER === "signed"))
+    .map(v => `<circle class="dot" data-iso="${v.iso}" cx="${px(v.dot[0]).toFixed(1)}" cy="${py(v.dot[1]).toFixed(1)}" r="2.6" fill="${cssVar("--accent")}" stroke="rgba(0,0,0,.5)" stroke-width=".8"></circle>`).join("");
+  host.innerHTML = `<svg viewBox="0 0 ${MW} ${MH}" preserveAspectRatio="xMidYMid meet" role="img"
+      aria-label="World map coloured by pledge status">${parts.join("")}${dots}</svg>`;
+  host.querySelectorAll(".cty,.dot").forEach(el => {
+    el.addEventListener("mousemove", ev => showTip(ev, el.dataset.iso));
+    el.addEventListener("mouseleave", hideTip);
+  });
+}
+
+function showTip(ev, iso) {
+  const v = C[iso]; const tip = $("#maptip");
+  if (!v) { tip.style.display = "none"; return; }
+  const st = v.pledge === "signed" ? (v.pledge_source === "eu" ? "covered by the EU endorsement" : "signed nationally") : "not a signatory";
+  tip.innerHTML = `<b>${v.name || iso}</b>
+    <div class="r"><span>Pledge</span><span>${st}</span></div>
+    <div class="r"><span>Electricity access</span><span>${fmtPct(v.access)}</span></div>
+    <div class="r"><span>GDP per capita</span><span>${v.gdp_pc == null ? "-" : "$" + fmtInt(v.gdp_pc)}</span></div>
+    <div class="r"><span>Renewables, final energy</span><span>${fmtPct(v.renew_fec)}</span></div>`;
+  const r = $("#c-map").getBoundingClientRect();
+  tip.style.display = "block";
+  tip.style.left = Math.min(ev.clientX - r.left + 14, r.width - 230) + "px";
+  tip.style.top = Math.min(ev.clientY - r.top + 12, r.height - 120) + "px";
+}
+function hideTip() { $("#maptip").style.display = "none"; }
+
+function applyFilter(f) {
+  FILTER = f;
+  document.querySelectorAll(".seg button").forEach(b => b.classList.toggle("on", b.dataset.f === f));
+  drawMap();
+}
+
+function updateLegend() {
+  $("#legend").innerHTML = `<div class="lg-t">Pledge status</div>
+    <div class="lg-k"><i style="background:${cssVar("--accent")}"></i>signed nationally</div>
+    <div class="lg-k"><i style="background:${cssVar("--accent2")}"></i>covered by the EU endorsement</div>
+    <div class="lg-k"><i style="background:${statusColor("none")}"></i>not a signatory</div>`;
+}
+
+/* ---------------------------------------------------------------- charts */
+function baseOpt() {
+  const line = cssVar("--line"), muted = cssVar("--muted"), ink = cssVar("--ink");
+  return {
+    animationDuration: 420,
+    textStyle: {fontFamily: "Instrument Sans, system-ui, sans-serif", fontSize: 12, color: ink},
+    grid: {left: 48, right: 18, top: 26, bottom: 34, containLabel: true},
+    tooltip: {
+      backgroundColor: cssVar("--surface"), borderColor: line, borderWidth: 1,
+      textStyle: {color: ink, fontSize: 12}, padding: [9, 11],
+      extraCssText: "border-radius:10px;box-shadow:0 12px 34px rgba(0,0,0,.45)",
+      axisPointer: {type: "line", lineStyle: {color: line}},
+    },
+    xAxis: {axisLine: {lineStyle: {color: line}}, axisTick: {show: false},
+      axisLabel: {color: muted, fontSize: 11}, splitLine: {show: false}},
+    yAxis: {axisLine: {show: false}, axisTick: {show: false},
+      axisLabel: {color: muted, fontSize: 11}, splitLine: {lineStyle: {color: line, opacity: 0.5}}},
+  };
+}
+const CHARTS = {};
+function chart(id, opt) {
+  const el = document.getElementById(id); if (!el) return;
+  if (CHARTS[id]) CHARTS[id].dispose();
+  const c = echarts.init(el, null, {renderer: "canvas"});
+  c.setOption(opt); CHARTS[id] = c; return c;
+}
+function resizeAll() { Object.values(CHARTS).forEach(c => c && c.resize()); }
+
+function drawEcon() {
+  const pts = ROWS.filter(v => v.gdp_pc > 0 && v.access != null);
+  const col = st => st === "national" ? cssVar("--accent") : st === "eu" ? cssVar("--accent2") : cssVar("--muted");
+  const groups = ["national", "eu", "none"].map(st => ({
+    name: st === "national" ? "Signed nationally" : st === "eu" ? "Covered by the EU" : "Not a signatory",
+    type: "scatter", data: pts.filter(v => statusOf(v) === st).map(v => [v.gdp_pc, v.access, Math.sqrt(v.pop || 1e6), v.name]),
+    symbolSize: d => Math.max(3, Math.min(26, Math.sqrt(d[2]) / 420)),
+    itemStyle: {color: col(st), opacity: st === "none" ? 0.45 : 0.85},
+  }));
+  const o = baseOpt();
+  o.grid = {left: 44, right: 20, top: 30, bottom: 40, containLabel: true};
+  o.tooltip.formatter = p => `<b>${p.data[3]}</b><br>GDP per capita $${fmtInt(p.data[0])}<br>Access ${fmtPct(p.data[1])}`;
+  o.legend = {top: 0, right: 0, icon: "circle", itemWidth: 8, itemHeight: 8, textStyle: {color: cssVar("--muted"), fontSize: 11}};
+  o.xAxis = Object.assign(o.xAxis, {type: "log", name: "GDP per capita, USD", nameLocation: "middle", nameGap: 26, nameTextStyle: {color: cssVar("--muted"), fontSize: 11},
+    axisLabel: {color: cssVar("--muted"), fontSize: 11, formatter: v => v >= 1000 ? v / 1000 + "k" : v}});
+  o.yAxis = Object.assign(o.yAxis, {type: "value", max: 100, name: "Access, %", nameTextStyle: {color: cssVar("--muted"), fontSize: 11}});
+  o.series = groups;
+  chart("c-scatter", o);
+
+  const wr = (v) => v / (v || 1);
+  const signedPop = AGG.share_pop * 100, signedGdp = AGG.share_gdp * 100;
+  const w = baseOpt();
+  w.grid = {left: 90, right: 30, top: 30, bottom: 26, containLabel: true};
+  w.xAxis = Object.assign(w.xAxis, {type: "value", max: 100, axisLabel: {color: cssVar("--muted"), fontSize: 11, formatter: "{value}%"}});
+  w.yAxis = Object.assign(w.yAxis, {type: "category", data: ["World GDP", "World population"]});
+  w.series = [
+    {name: "In signatory countries", type: "bar", stack: "s", barWidth: 26, data: [signedGdp, signedPop], itemStyle: {color: cssVar("--accent"), borderRadius: [4, 0, 0, 4]}},
+    {name: "Elsewhere", type: "bar", stack: "s", data: [100 - signedGdp, 100 - signedPop], itemStyle: {color: cssVar("--line"), borderRadius: [0, 4, 4, 0]}},
+  ];
+  w.legend = {top: 0, right: 0, icon: "circle", itemWidth: 8, itemHeight: 8, textStyle: {color: cssVar("--muted"), fontSize: 11}};
+  w.tooltip.formatter = p => `${p.seriesName}<br>${p.marker} ${p.name}: ${p.value.toFixed(1)}%`;
+  chart("c-weight", w);
+
+  const meds = ["national", "eu", "none"].map(st => {
+    const a = ROWS.filter(v => statusOf(v) === st && v.gdp_pc > 0).map(v => v.gdp_pc);
+    return {st, med: median(a), lo: q(a, 0.25), hi: q(a, 0.75)};
+  });
+  const g = baseOpt();
+  g.xAxis = Object.assign(g.xAxis, {type: "category", data: ["Signed nationally", "Covered by the EU", "Not a signatory"]});
+  g.yAxis = Object.assign(g.yAxis, {type: "value", axisLabel: {color: cssVar("--muted"), fontSize: 11, formatter: v => "$" + (v >= 1000 ? v / 1000 + "k" : v)}});
+  g.series = [
+    {type: "bar", barWidth: 46, data: meds.map(m => ({value: m.med, itemStyle: {color: cssVar("--accent"), opacity: 0.85, borderRadius: [6, 6, 0, 0]}})),
+     markLine: {silent: true, symbol: "none", lineStyle: {color: cssVar("--muted"), type: "dashed"}, data: []}},
+    {type: "custom", data: meds.map(m => [0, m.lo, m.hi])},
+  ];
+  g.series = [{type: "bar", barWidth: 46, data: meds.map(m => m.med), itemStyle: {color: cssVar("--accent"), opacity: 0.85, borderRadius: [6, 6, 0, 0]},
+    label: {show: true, position: "top", color: cssVar("--ink"), fontSize: 11, formatter: p => "$" + fmtInt(p.value)},
+    markLine: {silent: true, symbol: "none", lineStyle: {color: cssVar("--muted"), type: "dashed"},
+      data: [{yAxis: median(ROWS.filter(v => v.gdp_pc > 0).map(v => v.gdp_pc)), label: {formatter: "world median", color: cssVar("--muted"), fontSize: 10}}]}}];
+  g.tooltip.formatter = p => `${p.name}<br>median GDP per capita $${fmtInt(p.value)}`;
+  chart("c-gdpstat", g);
+
+  const top = ROWS.filter(v => v.pledge === "signed" && v.gdp > 0).sort((a, b) => b.gdp - a.gdp).slice(0, 15).reverse();
+  const t = baseOpt();
+  t.grid = {left: 8, right: 60, top: 10, bottom: 10, containLabel: true};
+  t.xAxis = Object.assign(t.xAxis, {type: "value", axisLabel: {color: cssVar("--muted"), fontSize: 10, formatter: v => v >= 1e12 ? v / 1e12 + "tn" : v / 1e9 + "bn"}});
+  t.yAxis = Object.assign(t.yAxis, {type: "category", data: top.map(v => v.name), axisLabel: {color: cssVar("--muted"), fontSize: 11}});
+  t.tooltip.formatter = p => `${p.name}<br>GDP $${fmtInt(top[p.dataIndex].gdp)}<br>Population ${fmtMil(top[p.dataIndex].pop)}`;
+  t.series = [{type: "bar", data: top.map(v => v.gdp), barWidth: 12, itemStyle: {color: cssVar("--accent"), opacity: 0.8, borderRadius: [0, 4, 4, 0]},
+    label: {show: true, position: "right", color: cssVar("--muted"), fontSize: 10, formatter: p => fmtUsd(p.value)}}];
+  chart("c-topsign", t);
+}
+
+function drawAccess() {
+  const un = ROWS.filter(v => v.pop && v.access != null).map(v => Object.assign({}, v, {unserved: v.pop * (1 - v.access / 100)}))
+    .sort((a, b) => b.unserved - a.unserved).slice(0, 15).reverse();
+  const u = baseOpt();
+  u.grid = {left: 8, right: 70, top: 10, bottom: 10, containLabel: true};
+  u.xAxis = Object.assign(u.xAxis, {type: "value", axisLabel: {color: cssVar("--muted"), fontSize: 10, formatter: v => v / 1e6 + "m"}});
+  u.yAxis = Object.assign(u.yAxis, {type: "category", data: un.map(v => v.name), axisLabel: {color: cssVar("--muted"), fontSize: 11}});
+  u.tooltip.formatter = p => `${p.name}<br>Without electricity ${fmtMil(un[p.dataIndex].unserved)}<br>Access ${fmtPct(un[p.dataIndex].access)}<br>${un[p.dataIndex].pledge === "signed" ? "Pledge signatory" : "Not a signatory"}`;
+  u.series = [{type: "bar", barWidth: 13, data: un.map(v => ({value: v.unserved, itemStyle: {color: v.pledge === "signed" ? cssVar("--accent") : cssVar("--line"), borderRadius: [0, 4, 4, 0]}})),
+    label: {show: true, position: "right", color: cssVar("--muted"), fontSize: 10, formatter: p => fmtMil(p.value)}}];
+  chart("c-unserved", u);
+
+  const years = Object.keys(SER).reduce((s, iso) => { Object.keys(SER[iso]).forEach(y => s.add(+y)); return s; }, new Set());
+  const ys = [...years].sort((a, b) => a - b).filter(y => y >= 2010);
+  const series = ys.map(y => {
+    let wsum = 0, psum = 0;
+    for (const v of ROWS) {
+      const a = SER[v.iso] && SER[v.iso][y];
+      if (a == null || !v.pop) continue;
+      wsum += a * v.pop; psum += v.pop;
+    }
+    return psum ? wsum / psum : null;
+  });
+  const l = baseOpt();
+  l.tooltip.formatter = p => `${p[0].axisValue}<br>World access ${p[0].value.toFixed(1)}%`;
+  l.xAxis = Object.assign(l.xAxis, {type: "category", data: ys, boundaryGap: false, axisLabel: {color: cssVar("--muted"), fontSize: 11}});
+  l.yAxis = Object.assign(l.yAxis, {type: "value", min: 70, max: 100, axisLabel: {color: cssVar("--muted"), fontSize: 11, formatter: "{value}%"}});
+  l.series = [{type: "line", data: series, smooth: 0.35, symbol: "circle", symbolSize: 4, showSymbol: false,
+    lineStyle: {width: 2, color: cssVar("--accent")}, itemStyle: {color: cssVar("--accent")},
+    areaStyle: {color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{offset: 0, color: "rgba(123,247,200,.28)"}, {offset: 1, color: "rgba(123,247,200,0)"}])}}];
+  chart("c-trend", l);
+
+  const gap = ROWS.filter(v => v.access != null && v.access_rural != null && v.pop > 3e6)
+    .map(v => Object.assign({}, v, {gap: v.access - v.access_rural}))
+    .sort((a, b) => b.gap - a.gap).slice(0, 12).reverse();
+  const r = baseOpt();
+  r.grid = {left: 8, right: 24, top: 24, bottom: 10, containLabel: true};
+  r.legend = {top: 0, right: 0, icon: "circle", itemWidth: 8, itemHeight: 8, textStyle: {color: cssVar("--muted"), fontSize: 11}};
+  r.xAxis = Object.assign(r.xAxis, {type: "value", max: 100, axisLabel: {color: cssVar("--muted"), fontSize: 10, formatter: "{value}%"}});
+  r.yAxis = Object.assign(r.yAxis, {type: "category", data: gap.map(v => v.name), axisLabel: {color: cssVar("--muted"), fontSize: 11}});
+  r.series = [
+    {name: "Urban", type: "bar", data: gap.map(v => v.access_urban), barWidth: 7, itemStyle: {color: cssVar("--accent"), opacity: 0.45}},
+    {name: "National", type: "bar", data: gap.map(v => v.access), barWidth: 7, itemStyle: {color: cssVar("--accent"), opacity: 0.75}},
+    {name: "Rural", type: "bar", data: gap.map(v => v.access_rural), barWidth: 7, itemStyle: {color: cssVar("--accent")}},
+  ];
+  chart("c-rural", r);
+
+  const bands = [[0, 25], [25, 50], [50, 75], [75, 95], [95, 100.1]];
+  const labels = ["<25%", "25-50%", "50-75%", "75-95%", "95%+"];
+  const cnt = (st) => bands.map(([lo, hi]) => ROWS.filter(v => v.access != null && statusOf(v) === st && v.access >= lo && v.access < hi).length);
+  const b = baseOpt();
+  b.legend = {top: 0, right: 0, icon: "circle", itemWidth: 8, itemHeight: 8, textStyle: {color: cssVar("--muted"), fontSize: 11}};
+  b.xAxis = Object.assign(b.xAxis, {type: "category", data: labels});
+  b.yAxis = Object.assign(b.yAxis, {type: "value", axisLabel: {color: cssVar("--muted"), fontSize: 11}});
+  b.series = [
+    {name: "Signed", type: "bar", stack: "a", data: cnt("national"), itemStyle: {color: cssVar("--accent")}, barWidth: 34},
+    {name: "EU-covered", type: "bar", stack: "a", data: cnt("eu"), itemStyle: {color: cssVar("--accent2")}},
+    {name: "Not signed", type: "bar", stack: "a", data: cnt("none"), itemStyle: {color: cssVar("--line")}},
+  ];
+  chart("c-bands", b);
+}
+
+function drawRenew() {
+  const top = ROWS.filter(v => v.pledge === "signed" && v.renew_fec != null).sort((a, b) => b.renew_fec - a.renew_fec).slice(0, 15).reverse();
+  const t = baseOpt();
+  t.grid = {left: 8, right: 54, top: 10, bottom: 10, containLabel: true};
+  t.xAxis = Object.assign(t.xAxis, {type: "value", axisLabel: {color: cssVar("--muted"), fontSize: 10, formatter: "{value}%"}});
+  t.yAxis = Object.assign(t.yAxis, {type: "category", data: top.map(v => v.name), axisLabel: {color: cssVar("--muted"), fontSize: 11}});
+  t.tooltip.formatter = p => `${p.name}<br>Renewables in final energy ${fmtPct(top[p.dataIndex].renew_fec)}<br>Access ${fmtPct(top[p.dataIndex].access)}`;
+  t.series = [{type: "bar", barWidth: 12, data: top.map(v => v.renew_fec), itemStyle: {color: cssVar("--accent"), opacity: 0.8, borderRadius: [0, 4, 4, 0]},
+    label: {show: true, position: "right", color: cssVar("--muted"), fontSize: 10, formatter: p => p.value.toFixed(0) + "%"}}];
+  chart("c-renewsign", t);
+
+  const m = ["national", "eu", "none"].map(st => median(ROWS.filter(v => statusOf(v) === st && v.renew_elec != null).map(v => v.renew_elec)));
+  const g = baseOpt();
+  g.xAxis = Object.assign(g.xAxis, {type: "category", data: ["Signed nationally", "Covered by the EU", "Not a signatory"]});
+  g.yAxis = Object.assign(g.yAxis, {type: "value", axisLabel: {color: cssVar("--muted"), fontSize: 11, formatter: "{value}%"}});
+  g.tooltip.formatter = p => `${p.name}<br>Median renewable electricity ${p.value.toFixed(1)}%`;
+  g.series = [{type: "bar", barWidth: 46, data: m, itemStyle: {color: [cssVar("--accent"), cssVar("--accent2"), cssVar("--line")], borderRadius: [6, 6, 0, 0]},
+    label: {show: true, position: "top", color: cssVar("--ink"), fontSize: 11, formatter: p => p.value.toFixed(1) + "%"}}];
+  chart("c-renelec", g);
+
+  const pts = ROWS.filter(v => v.renew_elec != null && v.access != null);
+  const s = baseOpt();
+  s.grid = {left: 44, right: 20, top: 30, bottom: 40, containLabel: true};
+  s.legend = {top: 0, right: 0, icon: "circle", itemWidth: 8, itemHeight: 8, textStyle: {color: cssVar("--muted"), fontSize: 11}};
+  s.xAxis = Object.assign(s.xAxis, {type: "value", max: 100, name: "Access, %", nameLocation: "middle", nameGap: 26, nameTextStyle: {color: cssVar("--muted"), fontSize: 11}});
+  s.yAxis = Object.assign(s.yAxis, {type: "value", max: 100, name: "Renewable electricity, %", nameTextStyle: {color: cssVar("--muted"), fontSize: 11}});
+  s.tooltip.formatter = p => `<b>${p.data[2]}</b><br>Access ${fmtPct(p.data[0])}<br>Renewable electricity ${fmtPct(p.data[1])}`;
+  s.series = ["national", "eu", "none"].map(st => ({
+    name: st === "national" ? "Signed nationally" : st === "eu" ? "Covered by the EU" : "Not a signatory",
+    type: "scatter", symbolSize: 6,
+    data: pts.filter(v => statusOf(v) === st).map(v => [v.access, v.renew_elec, v.name]),
+    itemStyle: {color: st === "national" ? cssVar("--accent") : st === "eu" ? cssVar("--accent2") : cssVar("--muted"), opacity: st === "none" ? 0.4 : 0.8},
+  }));
+  chart("c-renscatter", s);
+
+  const lag = ROWS.filter(v => v.pledge === "signed" && v.renew_fec != null && v.gdp_pc > 1500).sort((a, b) => a.renew_fec - b.renew_fec).slice(0, 12).reverse();
+  const l = baseOpt();
+  l.grid = {left: 8, right: 58, top: 10, bottom: 10, containLabel: true};
+  l.xAxis = Object.assign(l.xAxis, {type: "value", axisLabel: {color: cssVar("--muted"), fontSize: 10, formatter: "{value}%"}});
+  l.yAxis = Object.assign(l.yAxis, {type: "category", data: lag.map(v => v.name), axisLabel: {color: cssVar("--muted"), fontSize: 11}});
+  l.tooltip.formatter = p => `${p.name}<br>Renewables in final energy ${fmtPct(lag[p.dataIndex].renew_fec)}<br>GDP per capita $${fmtInt(lag[p.dataIndex].gdp_pc)}`;
+  l.series = [{type: "bar", barWidth: 12, data: lag.map(v => v.renew_fec), itemStyle: {color: cssVar("--accent2"), opacity: 0.9, borderRadius: [0, 4, 4, 0]},
+    label: {show: true, position: "right", color: cssVar("--muted"), fontSize: 10, formatter: p => p.value.toFixed(0) + "%"}}];
+  chart("c-renlag", l);
+}
+
+function drawWeto() {
+  const W = window.WETO || [];
+  const byId = id => W.find(c => c.id === id) || {series: [], categories: []};
+  const f14 = byId("f14");
+  const line = baseOpt();
+  line.legend = {top: 0, left: 0, icon: "circle", itemWidth: 8, itemHeight: 8, textStyle: {color: cssVar("--muted"), fontSize: 11}};
+  line.xAxis = Object.assign(line.xAxis, {type: "category", data: f14.categories, boundaryGap: false});
+  line.yAxis = Object.assign(line.yAxis, {type: "value", max: 100, axisLabel: {color: cssVar("--muted"), fontSize: 11, formatter: "{value}%"}});
+  line.tooltip.trigger = "axis";
+  line.series = f14.series.map((s, i) => ({
+    name: s.name, type: "line", data: s.values, smooth: 0.3, symbol: "circle", symbolSize: 6,
+    lineStyle: {width: i === 3 ? 2.4 : 1.8, color: i === 3 ? cssVar("--accent") : cssVar("--accent2")},
+    itemStyle: {color: i === 3 ? cssVar("--accent") : cssVar("--accent2")},
+  }));
+  chart("c-weto-line", line);
+
+  const f23 = byId("f23a");
+  const keep = ["Global", "G20", "Non G20", "Africa"];
+  const bar = baseOpt();
+  bar.legend = {top: 0, left: 0, icon: "circle", itemWidth: 8, itemHeight: 8, textStyle: {color: cssVar("--muted"), fontSize: 11}};
+  bar.xAxis = Object.assign(bar.xAxis, {type: "category", data: f23.categories});
+  bar.yAxis = Object.assign(bar.yAxis, {type: "value", max: 100, axisLabel: {color: cssVar("--muted"), fontSize: 11, formatter: "{value}%"}});
+  bar.series = f23.series.filter(s => keep.includes(s.name)).map(s => ({
+    name: s.name, type: "bar", data: s.values, barGap: "12%",
+    itemStyle: {color: s.name === "Global" ? cssVar("--accent") : s.name === "Africa" ? cssVar("--accent2") : cssVar("--line"), borderRadius: [3, 3, 0, 0]},
+  }));
+  chart("c-weto-bar", bar);
+
+  const f21 = byId("f21");
+  const donut = baseOpt();
+  donut.tooltip.formatter = p => `${p.name}<br>$${p.value.toFixed(1)}tn, ${p.percent}%`;
+  donut.series = [{type: "pie", radius: ["46%", "72%"], center: ["50%", "52%"], avoidLabelOverlap: true,
+    itemStyle: {borderColor: cssVar("--bg"), borderWidth: 2},
+    label: {color: cssVar("--muted"), fontSize: 11, formatter: "{b}\n{d}%"},
+    data: f21.categories.map((n, i) => ({name: n, value: f21.series[0].values[i]})),
+    color: ["#1b4fd0", "#2f6fe0", "#4a8cff", "#7aa8ff", "#a9c6ff", "#c9dbff", "#3b5b8a", "#5d7ba6", "#8fa8c9"]}];
+  chart("c-weto-donut", donut);
+
+  const tr = f14.series.find(s => /transport/i.test(s.name));
+  const tel = baseOpt();
+  tel.tooltip.trigger = "axis";
+  tel.xAxis = Object.assign(tel.xAxis, {type: "category", data: f14.categories, boundaryGap: false});
+  tel.yAxis = Object.assign(tel.yAxis, {type: "value", max: 60, axisLabel: {color: cssVar("--muted"), fontSize: 11, formatter: "{value}%"}});
+  tel.series = [{type: "line", data: tr ? tr.values : [], smooth: 0.35, symbol: "circle", symbolSize: 7,
+    lineStyle: {width: 2.4, color: cssVar("--accent")}, itemStyle: {color: cssVar("--accent")},
+    label: {show: true, position: "top", color: cssVar("--muted"), fontSize: 11, formatter: p => p.value + "%"},
+    areaStyle: {color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{offset: 0, color: "rgba(123,247,200,.25)"}, {offset: 1, color: "rgba(123,247,200,0)"}])}}];
+  chart("c-weto-transport", tel);
+}
+
+/* ----------------------------------------------------------------- table */
+const COLS = [
+  {k: "name", t: "Country"}, {k: "pledge", t: "Pledge"}, {k: "pop", t: "Population", n: 1},
+  {k: "gdp", t: "GDP", n: 1}, {k: "gdp_pc", t: "GDP per capita", n: 1}, {k: "access", t: "Access", n: 1},
+  {k: "access_rural", t: "Rural", n: 1}, {k: "renew_fec", t: "Renewables", n: 1}, {k: "renew_elec", t: "RE electricity", n: 1},
+];
+let SORT = {k: "pop", d: -1};
+function buildTable() {
+  $("#thead").innerHTML = "<tr>" + COLS.map(c => `<th data-k="${c.k}" class="${c.n ? "num" : ""}">${c.t}</th>`).join("") + "</tr>";
+  const rows = [...ROWS].sort((a, b) => {
+    const k = SORT.k, av = a[k], bv = b[k];
+    if (k === "name" || k === "pledge") return String(av || "").localeCompare(String(bv || "")) * SORT.d;
+    return ((av == null ? -Infinity : av) - (bv == null ? -Infinity : bv)) * SORT.d;
+  });
+  $("#tbody").innerHTML = rows.map(v => `<tr data-iso="${v.iso}">
+    <td>${v.name || v.iso}</td>
+    <td><span class="pill ${v.pledge}">${v.pledge === "signed" ? (v.pledge_source === "eu" ? "EU" : "Signed") : "No"}</span></td>
+    <td class="num">${fmtMil(v.pop)}</td><td class="num">${fmtUsd(v.gdp)}</td>
+    <td class="num">${v.gdp_pc == null ? "-" : "$" + fmtInt(v.gdp_pc)}</td>
+    <td class="num">${fmtPct(v.access)}</td><td class="num">${fmtPct(v.access_rural)}</td>
+    <td class="num">${fmtPct(v.renew_fec)}</td><td class="num">${fmtPct(v.renew_elec)}</td></tr>`).join("");
+  $("#thead").querySelectorAll("th").forEach(th => th.onclick = () => {
+    const k = th.dataset.k; SORT = {k, d: SORT.k === k ? -SORT.d : (k === "name" ? 1 : -1)}; buildTable();
+  });
+}
+
+/* ------------------------------------------------------------------- tabs */
+const PANELS = ["econ", "access", "renew", "weto", "tblwrap"];
+function showTab(id) {
+  PANELS.forEach(p => { const el = document.getElementById(p); if (el) el.hidden = p !== id; });
+  document.querySelectorAll(".tab").forEach(b => { const on = b.getAttribute("aria-controls") === id; b.classList.toggle("on", on); b.setAttribute("aria-selected", on); });
+  if (id === "econ") drawEcon();
+  if (id === "access") drawAccess();
+  if (id === "renew") drawRenew();
+  if (id === "weto") drawWeto();
+  if (id === "tblwrap") buildTable();
+  setTimeout(resizeAll, 60);
+}
+
+/* ----------------------------------------------------------------- footer */
+function buildFoot() {
+  $("#foot").innerHTML = `
+    <p class="footmeta">${Object.keys(C).length} countries monitored &middot; pledge as of ${DATA.meta.pledge_as_of} &middot; WDI last updated ${DATA.meta.wdi_last_updated} &middot; published ${"__BUILD_DATE__"} &middot; CC BY 4.0</p>
+    <div class="footgrid">
+      <div><h4>Pledge</h4><p>COP31 Presidency signatory sheet, captured by the three-hourly refresh on 20 November 2026 at 06:02 TRT. 60 national endorsements, 24 EU member states, and the EU entry the sheet counts once.</p></div>
+      <div><h4>Economy and access</h4><p>World Bank World Development Indicators: GDP current USD, GDP per capita, population, access to electricity, urban and rural access, renewable share of final energy and of electricity. Latest year per series.</p></div>
+      <div><h4>Pathways</h4><p>IRENA, World Energy Transitions Outlook 2026, 1.5C Scenario. Figures 1.4, 2.1 and 2.3, redrawn from the published report.</p></div>
+      <div><h4>Machine-readable</h4><p><a href="data/dashboard.json">data/dashboard.json</a> carries every field on this page. Boundaries: Natural Earth 110m, public domain.</p></div>
+    </div>`;
+}
+
+/* ------------------------------------------------------------------ start */
+function start() {
+  $("#app").hidden = false;
+  buildKpis();
+  drawMap();
+  updateLegend();
+  buildFoot();
+  showTab("econ");
+  document.getElementById("theme").addEventListener("click", () => {
+    const el = document.documentElement;
+    el.dataset.theme = el.dataset.theme === "light" ? "dark" : "light";
+    setTimeout(() => {
+      drawMap(); updateLegend();
+      const cur = PANELS.find(p => !document.getElementById(p).hidden);
+      if (cur) showTab(cur);
+    }, 40);
+  });
+  document.querySelectorAll(".seg button").forEach(b => b.onclick = () => applyFilter(b.dataset.f));
+  document.querySelectorAll(".tab").forEach(b => b.onclick = () => showTab(b.getAttribute("aria-controls")));
+  addEventListener("resize", () => { resizeAll(); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { resizeAll(); });
+}
+
+/* the geo file and weto data arrive as globals from small json islands */
+
+function boot() {
+  if (!window.__GEO__ || !window.__GEO__.features || !window.__GEO__.features.length) {
+    document.getElementById("app").innerHTML = "<p style='padding:40px'>Map geometry missing from this build.</p>";
+    return;
+  }
+  try {
+  start();
+  } catch (e) { if (!/^(K|REG|MAP|FOOT|TAB):/.test(document.title)) document.title = 'START:' + (e && e.message); }
+}
+boot();
+
+
+</script>
+</body>
+</html>
