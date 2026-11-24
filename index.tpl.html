@@ -322,7 +322,7 @@ body{font-size:15px}
 .card{background:var(--surface);border:1px solid color-mix(in srgb,var(--line) 85%,transparent);
   border-radius:16px;padding:18px 18px 12px;box-shadow:none}
 .card h3{font-size:14px;letter-spacing:-.01em}
-.tabs{gap:30px;margin:6px 0 20px;border-bottom:1px solid color-mix(in srgb,var(--line) 80%,transparent)}
+.tabs{gap:30px;margin:0;border-bottom:0}
 .tab{font-size:13.5px;padding:0 1px 12px;min-height:42px}
 #map{border-radius:18px}
 .mapbar{border-radius:14px}
@@ -424,7 +424,15 @@ tbody td{font-variant-numeric:tabular-nums}
 .ctrybar .sub{font-size:12px;color:var(--muted)}
 .kv{display:flex;flex-direction:column;gap:2px}
 #plans th,#plans td{text-align:left}
-.tblbar{display:flex;justify-content:flex-end;margin:0 0 10px}
+.tabrow{display:flex;align-items:center;gap:18px;border-bottom:1px solid color-mix(in srgb,var(--line) 80%,transparent)}
+.tabrow .tabs{border-bottom:0;margin:0;flex:1 1 auto}
+.btn-dl{display:inline-flex;align-items:center;gap:8px;background:var(--accent-fill);color:var(--accent-ink);
+  border:1px solid color-mix(in srgb,var(--accent) 55%,transparent);border-radius:10px;padding:0 15px;height:38px;
+  font-family:inherit;font-size:12.5px;font-weight:600;letter-spacing:.01em;white-space:nowrap;cursor:pointer;
+  box-shadow:var(--e1);transition:transform .16s var(--e-out),box-shadow .16s var(--e-out),filter .16s var(--e-out)}
+.btn-dl:hover{transform:translateY(-1px);box-shadow:var(--e2);filter:brightness(1.06)}
+.btn-dl:active{transform:translateY(0)}
+.btn-dl .ic{width:15px;height:15px;stroke-width:1.9}
 .kvrow{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:7px 0;border-bottom:1px solid var(--line)}
 .kvrow:last-child{border-bottom:0}
 .kvrow span{font-size:12.5px;color:var(--muted)}
@@ -479,6 +487,7 @@ tbody td{font-variant-numeric:tabular-nums}
 
   <p class="disclaimer">The designations employed and the presentation of materials herein do not imply the expression of any opinion on the part of IRENA concerning the legal status of any region, country, territory, city or area or of its authorities, or concerning the delimitation of frontiers or boundaries.</p>
 
+  <div class="tabrow">
   <nav class="tabs" role="tablist" aria-label="Views">
     <button class="tab on" id="tab-table" role="tab" aria-selected="true" aria-controls="tblwrap"><svg class="ic" aria-hidden="true"><use href="#i-table-2"></use></svg>Table</button>
     <button class="tab" id="tab-country" role="tab" aria-selected="false" aria-controls="country"><svg class="ic" aria-hidden="true"><use href="#i-globe-2"></use></svg>Country</button>
@@ -488,6 +497,8 @@ tbody td{font-variant-numeric:tabular-nums}
     <button class="tab" id="tab-weto" role="tab" aria-selected="false" aria-controls="weto"><svg class="ic" aria-hidden="true"><use href="#i-trending-down"></use></svg>WETO pathways</button>
     <button class="tab" id="tab-plans" role="tab" aria-selected="false" aria-controls="plans"><svg class="ic" aria-hidden="true"><use href="#i-calendar-check"></use></svg>National Plans</button>
   </nav>
+  <button class="btn-dl" id="dl" title="Download the country table as CSV"><svg class="ic" aria-hidden="true"><use href="#i-download"></use></svg>Download data</button>
+</div>
 
 
   <section id="country" class="charts" role="tabpanel" aria-labelledby="tab-country" tabindex="0" hidden>
@@ -542,9 +553,6 @@ tbody td{font-variant-numeric:tabular-nums}
     </div>
   </section>
 
-  <div class="tblbar">
-    <button class="themebtn" id="dl" title="Download the country table as CSV"><svg class="ic" aria-hidden="true"><use href="#i-download"></use></svg>Download data</button>
-  </div>
   <div class="tblwrap" id="tblwrap" role="tabpanel" aria-labelledby="tab-table" tabindex="0">
     <table id="tbl">
       <thead id="thead"></thead><tbody id="tbody"></tbody>
@@ -1032,6 +1040,8 @@ function showTab(id) {
   if (id === "weto") drawWeto();
   if (id === "tblwrap") buildTable();
   if (id === "plans") buildPlans();
+  const dl = document.getElementById("dl");
+  if (dl) dl.hidden = id !== "tblwrap";
   setTimeout(resizeAll, 60);
 }
 
