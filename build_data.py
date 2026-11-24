@@ -232,6 +232,71 @@ def name_index():
     return idx
 
 
+# ------------------------------------------------------- 2030 national targets
+def read_xlsx_rows(path, sheet=3):
+    """Minimal xlsx reader: zip + inline/shared strings, no openpyxl."""
+    import zipfile, html
+    z = zipfile.ZipFile(path)
+    ss = []
+    if "xl/sharedStrings.xml" in z.namelist():
+        sst = z.read("xl/sharedStrings.xml").decode("utf-8", "ignore")
+        ss = [html.unescape("".join(re.findall(r"<t[^>]*>([^<]*)</t>", si)))
+              for si in re.findall(r"<si>(.*?)</si>", sst, re.S)]
+    x = z.read(f"xl/worksheets/sheet{sheet}.xml").decode("utf-8", "ignore")
+    rows = []
+    for r in re.findall(r"<row[^>]*>(.*?)</row>", x, re.S):
+        cells = {}
+        for m in re.finditer(r'<c r="([A-Z]+)(\d+)"([^>]*)>(.*?)</c>', r, re.S):
+            col, _, attrs, inner = m.groups()
+            v = re.search(r"<v>([^<]*)</v>", inner)
+            isv = re.search(r"<is>.*?<t[^>]*>([^<]*)</t>", inner, re.S)
+            if isv:
+                cells[col] = html.unescape(isv.group(1))
+            elif v:
+                val = v.group(1)
+                if 't="s"' in attrs and ss:
+                    try:
+                        val = ss[int(val)]
+                    except Exception:
+                        pass
+                cells[col] = val
+        if cells:
+            rows.append(cells)
+    return rows
+
+
+def ember_targets():
+    path = os.path.join(RAW, "ember_targets.xlsx")
+    if not os.path.exists(path):
+        return {}
+    rows = read_xlsx_rows(path, 3)
+    if not rows:
+        return {}
+    hdr = rows[0]
+    want = {v: k for k, v in hdr.items()}
+    out = {}
+    for r in rows[1:]:
+        iso = (r.get(want.get("country_code", "A"), "") or "").strip().upper()
+        if len(iso) != 3:
+            continue
+        def num(key):
+            col = want.get(key)
+            if not col:
+                return None
+            try:
+                return float(r.get(col))
+            except (TypeError, ValueError):
+                return None
+        gw = num("res_capacity_target")
+        share = num("res_share_target")
+        yr = num("target_year")
+        if gw is None and share is None:
+            continue
+        out[iso] = {"res_target_gw": gw, "res_target_share": share,
+                    "target_year": int(yr) if yr else 2030}
+    return out
+
+
 def main():
     sheet = parse_pledge()
 
@@ -296,6 +361,14 @@ def main():
     for iso, meta in status.items():
         if iso in countries and iso in DOTS:
             countries[iso]["dot"] = DOTS[iso]
+    targets = ember_targets()
+    hit = 0
+    for iso, t in targets.items():
+        if iso in countries:
+            countries[iso].update(t)
+            hit += 1
+    print(f"2030 targets: {len(targets)} parsed, {hit} matched to countries")
+
     for iso in countries:
         countries[iso]["name"] = names.get(iso) or WB_SHORT.get(WB_NAMES.get(iso, ""), WB_NAMES.get(iso)) or iso
 

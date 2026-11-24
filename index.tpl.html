@@ -431,7 +431,7 @@ tbody td{font-variant-numeric:tabular-nums}
 
   <section id="econ" class="charts" role="tabpanel" aria-labelledby="tab-econ" tabindex="0">
     <div class="chartgrid">
-      <div class="card"><h3>Income and access move together</h3><p class="note">GDP per capita, log scale, against the share of people with electricity. Bubble area is population. Signatories in mint.</p><div class="cv" id="c-scatter"></div></div>
+      <div class="card"><h3>Income and access move together</h3><p class="note">GDP per capita, log scale, against the share of people with electricity. Bubble area is population. Signatories in blue.</p><div class="cv" id="c-scatter"></div></div>
       <div class="card"><h3>What the signatories weigh</h3><p class="note">Share of world population and world GDP covered by the pledge, against the rest.</p><div class="cv" id="c-weight"></div></div>
       <div class="card"><h3>GDP per capita by pledge status</h3><p class="note">Median, with the interquartile range as a band.</p><div class="cv" id="c-gdpstat"></div></div>
       <div class="card"><h3>Population and income, top signatories</h3><p class="note">The fifteen largest signatory economies.</p><div class="cv" id="c-topsign"></div></div>
@@ -440,7 +440,7 @@ tbody td{font-variant-numeric:tabular-nums}
 
   <section id="access" class="charts" role="tabpanel" aria-labelledby="tab-access" tabindex="0" hidden>
     <div class="chartgrid">
-      <div class="card"><h3>Where the unserved live</h3><p class="note">People without electricity, fifteen largest. Mint means the country has signed.</p><div class="cv tall" id="c-unserved"></div></div>
+      <div class="card"><h3>Where the unserved live</h3><p class="note">People without electricity, fifteen largest. Blue means the country has signed.</p><div class="cv tall" id="c-unserved"></div></div>
       <div class="card"><h3>World access has climbed, slowly</h3><p class="note">Population-weighted access rate, World Bank series.</p><div class="cv tall" id="c-trend"></div></div>
       <div class="card"><h3>The rural gap</h3><p class="note">National, urban and rural access for twenty signatories with the widest rural gap.</p><div class="cv" id="c-rural"></div></div>
       <div class="card"><h3>Access distribution</h3><p class="note">How many countries sit in each access band, signed against not signed.</p><div class="cv" id="c-bands"></div></div>
@@ -451,8 +451,9 @@ tbody td{font-variant-numeric:tabular-nums}
     <div class="chartgrid">
       <div class="card"><h3>Renewables in final energy</h3><p class="note">Share of final energy consumption from renewables, fifteen leaders.</p><div class="cv tall" id="c-renewsign"></div></div>
       <div class="card"><h3>Renewable electricity share</h3><p class="note">Median by pledge status, latest year.</p><div class="cv tall" id="c-renelec"></div></div>
-      <div class="card"><h3>Renewables against access</h3><p class="note">Renewable electricity share against access rate. Signatories in mint.</p><div class="cv" id="c-renscatter"></div></div>
+      <div class="card"><h3>Renewables against access</h3><p class="note">Renewable electricity share against access rate. Signatories in blue.</p><div class="cv" id="c-renscatter"></div></div>
       <div class="card"><h3>Where the pledge adds most</h3><p class="note">Signatories with the lowest renewable share in final energy.</p><div class="cv" id="c-renlag"></div></div>
+      <div class="card"><h3>2030 renewable capacity targets</h3><p class="note">National targets for 2030, eighteen largest. Hover for the share target.</p><div class="cv" id="c-rentarget"></div></div>
     </div>
   </section>
 
@@ -787,6 +788,17 @@ function drawRenew() {
   l.series = [{type: "bar", barWidth: 12, data: lag.map(v => v.renew_fec), itemStyle: {color: cssVar("--accent2"), opacity: 0.9, borderRadius: [0, 4, 4, 0]},
     label: {show: true, position: "right", color: cssVar("--muted"), fontSize: 10, formatter: p => p.value.toFixed(0) + "%"}}];
   chart("c-renlag", l);
+
+  const tg = ROWS.filter(v => v.res_target_gw != null).sort((a, b) => b.res_target_gw - a.res_target_gw).slice(0, 18).reverse();
+  const q = baseOpt();
+  q.grid = {left: 8, right: 70, top: 10, bottom: 10, containLabel: true};
+  q.xAxis = Object.assign(q.xAxis, {type: "value", axisLabel: {color: cssVar("--muted"), fontSize: 10, formatter: "{value} GW"}});
+  q.yAxis = Object.assign(q.yAxis, {type: "category", data: tg.map(v => v.name), axisLabel: {color: cssVar("--muted"), fontSize: 11}});
+  q.tooltip.formatter = p => { const v = tg[p.dataIndex]; return `<b>${v.name}</b><br>2030 target ${v.res_target_gw.toFixed(1)} GW` + (v.res_target_share != null ? `<br>Renewable share target ${fmtPct(v.res_target_share)}` : ""); };
+  q.series = [{type: "bar", barWidth: 12,
+    data: tg.map(v => ({value: v.res_target_gw, itemStyle: {color: statusColor(statusOf(v)), borderRadius: [0, 4, 4, 0]}})),
+    label: {show: true, position: "right", color: cssVar("--muted"), fontSize: 10, formatter: p => (p.value >= 100 ? Math.round(p.value) : p.value.toFixed(0)) + " GW"}}];
+  chart("c-rentarget", q);
 }
 
 function drawWeto() {
@@ -843,7 +855,7 @@ function drawWeto() {
 const COLS = [
   {k: "name", t: "Country"}, {k: "pledge", t: "Pledge"}, {k: "pop", t: "Population", n: 1},
   {k: "gdp", t: "GDP", n: 1}, {k: "gdp_pc", t: "GDP per capita", n: 1}, {k: "access", t: "Access", n: 1},
-  {k: "access_rural", t: "Rural", n: 1}, {k: "renew_fec", t: "Renewables", n: 1}, {k: "renew_elec", t: "RE electricity", n: 1},
+  {k: "access_rural", t: "Rural", n: 1}, {k: "renew_fec", t: "Renewables", n: 1}, {k: "renew_elec", t: "RE electricity", n: 1}, {k: "res_target_gw", t: "2030 target", n: 1},
 ];
 let SORT = {k: "pop", d: -1};
 function buildTable() {
@@ -859,7 +871,8 @@ function buildTable() {
     <td class="num">${fmtMil(v.pop)}</td><td class="num">${fmtUsd(v.gdp)}</td>
     <td class="num">${v.gdp_pc == null ? "-" : "$" + fmtInt(v.gdp_pc)}</td>
     <td class="num">${fmtPct(v.access)}</td><td class="num">${fmtPct(v.access_rural)}</td>
-    <td class="num">${fmtPct(v.renew_fec)}</td><td class="num">${fmtPct(v.renew_elec)}</td></tr>`).join("");
+    <td class="num">${fmtPct(v.renew_fec)}</td><td class="num">${fmtPct(v.renew_elec)}</td>
+    <td class="num">${v.res_target_gw == null ? "-" : (v.res_target_gw >= 100 ? Math.round(v.res_target_gw) : v.res_target_gw.toFixed(1)) + " GW" + (v.res_target_share != null ? " · " + Math.round(v.res_target_share) + "%" : "")}</td></tr>`).join("");
   $("#thead").querySelectorAll("th").forEach(th => th.onclick = () => {
     const k = th.dataset.k; SORT = {k, d: SORT.k === k ? -SORT.d : (k === "name" ? 1 : -1)}; buildTable();
   });
@@ -884,7 +897,7 @@ function buildFoot() {
     <p class="footmeta">${Object.keys(C).length} countries monitored &middot; pledge as of ${DATA.meta.pledge_as_of} &middot; WDI last updated ${DATA.meta.wdi_last_updated} &middot; published ${"__BUILD_DATE__"} &middot; CC BY 4.0</p>
     <div class="footgrid">
       <div><h4>Pledge</h4><p>Source: COP31 Presidency, Electrify Now</p></div>
-      <div><h4>Economy and access</h4><p>World Bank World Development Indicators: GDP current USD, GDP per capita, population, access to electricity, urban and rural access, renewable share of final energy and of electricity. Latest year per series.</p></div>
+      <div><h4>Economy and access</h4><p>World Bank World Development Indicators: GDP current USD, GDP per capita, population, access to electricity, urban and rural access, renewable share of final energy and of electricity. Latest year per series. National 2030 renewable capacity targets: Ember, Global Renewable Power Sector Targets 2030, 11 November 2026.</p></div>
       <div><h4>Pathways</h4><p>IRENA, World Energy Transitions Outlook 2026, 1.5C Scenario. Figures 1.4, 2.1 and 2.3, redrawn from the published report.</p></div>
       <div><h4>Machine-readable</h4><p><a href="data/dashboard.json">data/dashboard.json</a> carries every field on this page. Boundaries: Natural Earth 110m, public domain.</p></div>
     </div>`;
