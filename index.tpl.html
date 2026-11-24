@@ -62,7 +62,7 @@ body{background-color:var(--bg);background-image:radial-gradient(1200px 620px at
 .sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 
 /* masthead */
-.masthead{display:grid;grid-template-columns:1fr auto;gap:12px 24px;align-items:start;padding-bottom:20px;border-bottom:1px solid var(--line)}
+.masthead{display:grid;grid-template-columns:1fr auto;gap:12px 24px;align-items:start;padding-bottom:20px}
 .brand{display:flex;align-items:flex-start;gap:12px}
 .brand-text{display:flex;flex-direction:column;gap:4px}
 .brand-text h1{line-height:1.15}
@@ -312,7 +312,7 @@ body{font-size:15px}
 .brand-text h1{font-size:clamp(26px,3.1vw,34px);font-weight:700;letter-spacing:-.022em}
 .subtitle{font-size:13.5px;color:var(--muted);max-width:66ch}
 .mark{width:38px;height:38px;border-radius:12px;font-size:14px;letter-spacing:.02em}
-.masthead{padding-bottom:22px;border-bottom:1px solid color-mix(in srgb,var(--line) 80%,transparent)}
+.masthead{padding-bottom:22px}
 .kpi{background:var(--surface);border:1px solid color-mix(in srgb,var(--line) 85%,transparent);
   border-radius:16px;padding:18px 18px 16px;box-shadow:none}
 .kpi:hover{box-shadow:var(--e2)}
@@ -423,6 +423,7 @@ tbody td{font-variant-numeric:tabular-nums}
 .ctrybar .badge.eu{color:var(--accent2);border-color:var(--accent2)}
 .ctrybar .sub{font-size:12px;color:var(--muted)}
 .kv{display:flex;flex-direction:column;gap:2px}
+#plans th,#plans td{text-align:left}
 .kvrow{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:7px 0;border-bottom:1px solid var(--line)}
 .kvrow:last-child{border-bottom:0}
 .kvrow span{font-size:12.5px;color:var(--muted)}
