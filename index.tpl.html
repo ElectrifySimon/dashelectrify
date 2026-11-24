@@ -488,7 +488,8 @@ const fmtInt = n => n == null ? "-" : Math.round(n).toLocaleString("en-US");
 const fmtMil = n => n == null ? "-" : (n >= 1e9 ? (n / 1e9).toFixed(2) + "bn" : n >= 1e6 ? (n / 1e6).toFixed(n >= 1e8 ? 0 : 1) + "m" : fmtInt(n));
 const fmtPct = (n, d = 1) => n == null ? "-" : n.toFixed(d) + "%";
 const fmtUsd = n => n == null ? "-" : n >= 1e12 ? "$" + (n / 1e12).toFixed(1) + "tn" : n >= 1e9 ? "$" + (n / 1e9).toFixed(0) + "bn" : "$" + fmtInt(n);
-const statusOf = v => v.pledge === "signed" ? (v.pledge_source === "eu" ? "eu" : "national") : "none";
+const statusOf = v => v.pledge === "signed" ? (v.pledge_source === "eu" ? "eu" : "national")
+  : (v.pledge === "likely" || v.pledge === "considering") ? v.pledge : "none";
 const median = a => { if (!a.length) return null; const s = [...a].sort((x, y) => x - y); const m = s.length >> 1; return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; };
 const q = (a, p) => { if (!a.length) return null; const s = [...a].sort((x, y) => x - y); const i = (s.length - 1) * p, lo = Math.floor(i), hi = Math.ceil(i); return s[lo] + (s[hi] - s[lo]) * (i - lo); };
 
@@ -496,11 +497,11 @@ const q = (a, p) => { if (!a.length) return null; const s = [...a].sort((x, y) =
 function buildKpis() {
   const popShare = AGG.share_pop, gdpShare = AGG.share_gdp;
   const cards = [
-    ["Signatories", fmtInt(AGG.total_signed + 1), "60 national endorsements, 24 EU member states, plus the EU entry the sheet counts once"],
+    ["Signatories", fmtInt(AGG.total_signed), `${AGG.signatories} national endorsements, ${AGG.eu_covered} covered by the EU endorsement`],
     ["People covered", fmtMil(AGG.pop_signed), fmtPct(popShare * 100, 1) + " of the world population"],
     ["Economies covered", fmtUsd(AGG.gdp_signed), fmtPct(gdpShare * 100, 1) + " of world GDP, current USD"],
     ["Without electricity", fmtMil(AGG.unserved_signed), "inside the signatory countries, " + fmtPct(AGG.unserved_signed / AGG.unserved_world * 100, 0) + " of the global unserved"],
-    ["Likely or considering", "31", "11 likely, 20 considering, as the tracker records them"],
+    ["Likely or considering", fmtInt(AGG.likely + AGG.considering), `${AGG.likely} likely, ${AGG.considering} considering`],
   ];
   $("#kpis").innerHTML = cards.map(([l, n, s]) =>
     `<div class="kpi"><div class="l">${l}</div><div class="n">${n}</div><div class="sub2">${s}</div></div>`).join("");
@@ -511,7 +512,16 @@ let FILTER = "all";
 const MAPID = "c-map";
 const MW = 1000, MH = 500, LAT_TOP = 84, LAT_BOT = -58;
 
-const statusColor = st => st === "national" ? cssVar("--accent") : st === "eu" ? cssVar("--accent2")
+const alpha = (hex, a) => {
+  const h = (hex || "").trim().replace("#", "");
+  if (h.length !== 6) return hex;
+  const n = parseInt(h, 16);
+  return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${a})`;
+};
+const statusColor = st => st === "national" ? cssVar("--accent")
+  : st === "eu" ? cssVar("--accent2")
+  : st === "likely" ? alpha(cssVar("--accent"), 0.42)
+  : st === "considering" ? alpha(cssVar("--accent2"), 0.34)
   : (document.documentElement.dataset.theme === "light" ? "#dbe3ee" : "#20304a");
 
 const px = lon => (lon + 180) / 360 * MW;
@@ -575,6 +585,8 @@ function updateLegend() {
   $("#legend").innerHTML = `<div class="lg-t">Pledge status</div>
     <div class="lg-k"><i style="background:${cssVar("--accent")}"></i>signed nationally</div>
     <div class="lg-k"><i style="background:${cssVar("--accent2")}"></i>covered by the EU endorsement</div>
+    <div class="lg-k"><i style="background:${statusColor("likely")}"></i>likely</div>
+    <div class="lg-k"><i style="background:${statusColor("considering")}"></i>considering</div>
     <div class="lg-k"><i style="background:${statusColor("none")}"></i>not a signatory</div>`;
 }
 
@@ -871,7 +883,7 @@ function buildFoot() {
   $("#foot").innerHTML = `
     <p class="footmeta">${Object.keys(C).length} countries monitored &middot; pledge as of ${DATA.meta.pledge_as_of} &middot; WDI last updated ${DATA.meta.wdi_last_updated} &middot; published ${"__BUILD_DATE__"} &middot; CC BY 4.0</p>
     <div class="footgrid">
-      <div><h4>Pledge</h4><p>COP31 Presidency signatory sheet, captured by the three-hourly refresh on 20 November 2026 at 06:02 TRT. 60 national endorsements, 24 EU member states, and the EU entry the sheet counts once.</p></div>
+      <div><h4>Pledge</h4><p>COP31 Presidency pledge registry, status as of 23 November 2026. ${AGG.signatories} national endorsements and ${AGG.eu_covered} countries covered by the EU endorsement.</p></div>
       <div><h4>Economy and access</h4><p>World Bank World Development Indicators: GDP current USD, GDP per capita, population, access to electricity, urban and rural access, renewable share of final energy and of electricity. Latest year per series.</p></div>
       <div><h4>Pathways</h4><p>IRENA, World Energy Transitions Outlook 2026, 1.5C Scenario. Figures 1.4, 2.1 and 2.3, redrawn from the published report.</p></div>
       <div><h4>Machine-readable</h4><p><a href="data/dashboard.json">data/dashboard.json</a> carries every field on this page. Boundaries: Natural Earth 110m, public domain.</p></div>

@@ -45,46 +45,38 @@ def get_json(url, cache_name, tries=4):
 
 
 # ---------------------------------------------------------------- pledge list
+SHEET_ID = "15477d2O1xoP0Sx4_8whJbSFd2R1VkOs6qB6Z1pJVg9Q"
+SHEET_URL = f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/gviz/tq?tqx=out:csv&gid=0"
+
+
 def parse_pledge():
-    html = open(os.path.join(ROOT, "src", "pledge_source.html"), encoding="utf-8").read()
-    tables = re.findall(r"<table>(.*?)</table>", html, re.S)
-
-    def rows(tbl):
-        out = []
-        for tr in re.findall(r"<tr>(.*?)</tr>", tbl, re.S):
-            cells = [
-                re.sub(r"\s+", " ", re.sub(r"<[^>]+>", "", c)).strip()
-                for c in re.findall(r"<t[dh][^>]*>(.*?)</t[dh]>", tr, re.S)
-            ]
-            if cells:
-                out.append(cells)
-        return out
-
-    signed, watch = [], []
-    for i, t in enumerate(tables):
-        r = rows(t)
-        if not r:
+    """Status per country, straight from the live tracker export."""
+    import csv, io
+    path = os.path.join(RAW, "pledge.csv")
+    if not os.path.exists(path) or os.path.getsize(path) < 1000:
+        req = urllib.request.Request(SHEET_URL, headers=UA)
+        with urllib.request.urlopen(req, timeout=60) as r:
+            open(path, "wb").write(r.read())
+    rows = list(csv.reader(io.StringIO(open(path, encoding="utf-8").read())))
+    body = [r for r in rows[3:] if r and r[0].strip()]
+    status = {}
+    for r in body:
+        name = r[0].strip()
+        st = (r[2].strip() if len(r) > 2 else "")
+        low = st.lower()
+        if name.lower() == "european union":
             continue
-        head = [c.lower() for c in r[0]]
-        body = r[1:] if "country" in " ".join(head) else r
-        for row in body:
-            if not row or not row[0]:
-                continue
-            if i == 0:
-                signed.append({"name": row[0], "region": row[1] if len(row) > 1 else "",
-                               "date": row[2] if len(row) > 2 else ""})
-            else:
-                watch.append({"name": row[0], "note": " ".join(row[1:])[:120]})
-
-    # the sheet counts the EU once for the bloc; 24 member states ride with it
-    eu_members = [
-        "Austria", "Belgium", "Bulgaria", "Croatia", "Cyprus", "Czechia", "Denmark",
-        "Estonia", "Finland", "France", "Germany", "Greece", "Hungary", "Ireland",
-        "Italy", "Latvia", "Lithuania", "Luxembourg", "Malta", "Netherlands",
-        "Poland", "Portugal", "Romania", "Slovakia", "Slovenia", "Spain", "Sweden",
-    ]
-    individual_eu = [r[0] for r in rows(tables[1])[1:]] if len(tables) > 1 else []
-    return signed, watch, eu_members, individual_eu
+        if low == "yes":
+            status[name] = "national"
+        elif low.startswith("yes - eu"):
+            status[name] = "eu"
+        elif low == "likely":
+            status[name] = "likely"
+        elif low == "considering":
+            status[name] = "considering"
+        else:
+            status[name] = "none"
+    return status
 
 
 # ------------------------------------------------------------- name to ISO-3
@@ -206,30 +198,42 @@ def wb(indicator, start=2010, end=2024):
     return latest, series
 
 
-def main():
-    signed, watch, eu_members, individual_eu = parse_pledge()
-    print(f"pledge: {len(signed)} national rows, {len(watch)} watch rows")
+def norm(s):
+    import unicodedata, re as _re
+    s = unicodedata.normalize("NFKD", s).encode("ascii", "ignore").decode().lower()
+    return _re.sub(r"[^a-z ]", "", s).replace("the ", "").strip()
 
-    status = {}
-    for e in signed:
-        iso = to_iso(e["name"])
-        if not iso:
-            print("  unmapped signatory:", e["name"])
-            continue
-        status[iso] = {"status": "signed", "date": e["date"], "region": e["region"],
-                       "source": "national",
-                       "individual_eu": e["name"].strip().lower() in {n.lower() for n in individual_eu}}
-    for name in eu_members:
-        iso = to_iso(name)
-        if iso and iso not in status:
-            status[iso] = {"status": "signed", "date": "EU bloc", "region": "Europe",
-                           "source": "eu"}
-    for e in watch:
-        iso = to_iso(e["name"])
-        if iso and iso not in status:
-            note = (e.get("note") or "").lower()
-            st = "likely" if "likely" in note else ("considering" if "consider" in note else "considering")
-            status[iso] = {"status": st, "date": "", "region": "", "source": "watch"}
+
+def name_index():
+    geo = json.load(open(os.path.join(ROOT, "data", "countries.geo.json")))
+    idx = {}
+    for f in geo["features"]:
+        pr = f["properties"]
+        iso = (pr.get("iso") or "").upper()
+        nm = pr.get("name") or pr.get("name_en")
+        if iso and nm:
+            idx[norm(nm)] = iso
+    idx.update({
+        "turkiye": "TUR", "republic of korea": "KOR", "micronesia": "FSM",
+        "st kitts and nevis": "KNA", "congo": "COG", "lao peoples democratic republic": "LAO",
+        "cote divoire": "CIV", "eswatini": "SWZ", "united arab emirates": "ARE",
+        "bolivia": "BOL", "venezuela": "VEN", "iran": "IRN", "syria": "SYR",
+        "moldova": "MDA", "tanzania": "TZA", "vietnam": "VNM", "brunei": "BRN",
+        "cape verde": "CPV", "sao tome and principe": "STP", "timor leste": "TLS",
+        "palestine": "PSE", "gambia": "GMB", "bahamas": "BHS", "kyrgyzstan": "KGZ",
+        "slovakia": "SVK", "czech republic": "CZE", "north macedonia": "MKD",
+        "democratic republic of the congo": "COD", "tanzania united republic of": "TZA",
+        "united states of america": "USA", "russian federation": "RUS",
+        "republic of moldova": "MDA", "hong kong": "HKG",
+        "cook islands": "COK", "nauru": "NRU", "niue": "NIU", "vatican": "VAT",
+        "state of palestine": "PSE", "democratic republic of the congo": "COD",
+        "democratic peoples republic of korea": "PRK", "republic of the congo": "COG",
+    })
+    return idx
+
+
+def main():
+    sheet = parse_pledge()
 
     data = {}
     for key, code in IND.items():
@@ -246,15 +250,35 @@ def main():
             data["__access_series__"] = {k: v for k, v in series.items() if k in _GEO_ISOS}
 
     access_series = data.pop("__access_series__", {})
+    idx = name_index()
+    idx.update({norm(v): k for k, v in WB_NAMES.items()})
+    status, unmapped = {}, []
+    for name, st in sheet.items():
+        iso = idx.get(norm(name))
+        if not iso:
+            unmapped.append(name)
+            continue
+        if st == "none":
+            status.setdefault(iso, {"status": "none", "source": ""})
+            continue
+        status[iso] = {"status": st, "source": st}
+    print(f"pledge rows {len(sheet)}, mapped {len(status)}, unmapped {len(unmapped)} {unmapped[:10]}")
+    print("  national", sum(1 for v in status.values() if v["status"] == "national"),
+          "eu", sum(1 for v in status.values() if v["status"] == "eu"),
+          "likely", sum(1 for v in status.values() if v["status"] == "likely"),
+          "considering", sum(1 for v in status.values() if v["status"] == "considering"))
+
     countries = {}
     for iso, vals in data.items():
         if iso.startswith("__"):
             continue
-        st = status.get(iso, {"status": "none"})
-        countries[iso] = {**vals, "pledge": st.get("status", "none"),
-                          "pledge_date": st.get("date", ""),
-                          "pledge_source": st.get("source", ""),
-                          "pledge_individual_eu": bool(st.get("individual_eu"))}
+        st = status.get(iso, {"status": "none", "source": ""})
+        pv = st.get("status", "none")
+        countries[iso] = {**vals,
+                          "pledge": "signed" if pv in ("national", "eu") else pv,
+                          "pledge_date": "",
+                          "pledge_source": pv if pv in ("national", "eu") else "",
+                          "pledge_individual_eu": False}
 
     # attach names from countries.geo.json for anything the WB missed
     geo = json.load(open(os.path.join(ROOT, "data", "countries.geo.json")))
@@ -265,8 +289,10 @@ def main():
 
     for iso, meta in status.items():
         if iso not in countries:
-            countries[iso] = {"pledge": meta["status"], "pledge_date": meta.get("date", ""),
-                              "pledge_source": meta.get("source", "")}
+            pv = meta["status"]
+            countries[iso] = {"pledge": "signed" if pv in ("national", "eu") else pv,
+                              "pledge_date": "",
+                              "pledge_source": pv if pv in ("national", "eu") else ""}
     for iso, meta in status.items():
         if iso in countries and iso in DOTS:
             countries[iso]["dot"] = DOTS[iso]
@@ -306,10 +332,10 @@ def main():
     out = {"meta": {
         "title": "DashElectrify",
         "subtitle": "The 35-by-35 electrification pledge, country by country",
-        "pledge_as_of": "2026-11-20",
+        "pledge_as_of": "2026-11-23",
         "wdi_last_updated": "2026-11-11",
         "sources": [
-            "COP31 Presidency signatory sheet, as captured 2026-11-20 06:02 TRT",
+            "COP31 Presidency pledge registry, status as of 2026-11-23",
             "World Bank World Development Indicators, API, last updated 2026-11-11",
         ],
     }, "agg": agg, "countries": countries, "access_series": access_series}
