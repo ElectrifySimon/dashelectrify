@@ -30,6 +30,11 @@ Navy, not graphite-mint: `--bg #070b13`, `--surface #0d1522`, accent electric bl
 - `python3 -m http.server` serves `.mjs` fine, but an ES module import only resolves when `vendor/` sits beside the HTML; `build/vendor` is a symlink for local tests.
 - Headless Chrome ignores `--window-size` here; use `scripts/shot.py` (Playwright) for screenshots and console capture.
 
+## Traps found (cont.)
+
+- `countries.geo.json` properties are `{iso, name}` only. Keying a name lookup on `iso_a3` silently yields an empty dict and every country falls back to its ISO3 code. Resolve from `properties.iso`, then the World Bank payload's own `country.value`, then the code as a last resort.
+- Natural Earth 110m drops tiny states (Singapore, Andorra, Monaco, Maldives, Seychelles, Micronesia and six more). They have WDI data but no geometry, so names must come from the data source, not the map file.
+
 ## Open
 
 - Light-theme gridlines and no-data land are washed out; darken `--line` and the no-data fill.
