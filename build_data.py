@@ -204,6 +204,15 @@ def norm(s):
     return _re.sub(r"[^a-z ]", "", s).replace("the ", "").strip()
 
 
+# Countries present in the geography file with no World Bank name of their own.
+FALLBACK_NAMES = {
+    "COK": "Cook Islands",
+    "NIU": "Niue",
+    "VAT": "Vatican City",
+    "TWN": "Taiwan",
+    "XKX": "Kosovo",
+}
+
 def name_index():
     geo = json.load(open(os.path.join(ROOT, "data", "countries.geo.json")))
     idx = {}
@@ -429,7 +438,8 @@ def main():
     print(f"2030 targets: {len(targets)} parsed, {hit} matched to countries")
 
     for iso in countries:
-        countries[iso]["name"] = names.get(iso) or WB_SHORT.get(WB_NAMES.get(iso, ""), WB_NAMES.get(iso)) or iso
+        countries[iso]["name"] = (names.get(iso) or WB_SHORT.get(WB_NAMES.get(iso, ""), WB_NAMES.get(iso))
+                                or FALLBACK_NAMES.get(iso) or iso)
 
     mix = owid_mix(os.path.join(RAW, "owid_elec_mix.csv"))
     grid = dashdist_grid("/home/simon/projects/dashdist/data/dashboard.json")
