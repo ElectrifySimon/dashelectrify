@@ -22,6 +22,8 @@ RAW = os.path.join(ROOT, "data", "raw")
 os.makedirs(RAW, exist_ok=True)
 
 UA = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) dashElectrify/1.0"}
+WB_NAMES = {}  # official English names straight from the API payload
+WB_SHORT = {"Micronesia, Fed. Sts.": "Micronesia"}
 
 
 def get_json(url, cache_name, tries=4):
@@ -193,6 +195,8 @@ def wb(indicator, start=2010, end=2024):
     for row in data[1]:
         iso = row.get("countryiso3code")
         val = row.get("value")
+        if iso and row.get("country", {}).get("value"):
+            WB_NAMES[iso] = row["country"]["value"]
         yr = int(row.get("date"))
         if not iso or val is None:
             continue
@@ -267,7 +271,7 @@ def main():
         if iso in countries and iso in DOTS:
             countries[iso]["dot"] = DOTS[iso]
     for iso in countries:
-        countries[iso]["name"] = names.get(iso, iso)
+        countries[iso]["name"] = names.get(iso) or WB_SHORT.get(WB_NAMES.get(iso, ""), WB_NAMES.get(iso)) or iso
 
     signed_isos = [i for i, v in countries.items() if v["pledge"] == "signed"]
     agg = {
