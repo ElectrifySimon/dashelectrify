@@ -1,3 +1,10 @@
+## 2026-11-24 - Background depth, download, table polish
+
+- Shipped an animated contour field on `#bgfx` (40 polylines, three summed sines, accent at 4 to 11 per cent alpha, 30fps, stops on `visibilitychange`, single static draw under reduced motion), plus a two-stop accent glow behind the masthead and a mask that fades the field out by 88 per cent down the page. The canvas had existed since the shell was copied but nothing ever drew on it, which is why the page read as a flat navy fill.
+- `Download data` on the tab row, solid accent button, CSV of the current sort: 12 columns, rounded, UTF-8 BOM.
+- Masthead rule removed; National Plans table left-aligned; table caption removed; ISO3 fallback names for Cook Islands, Niue, Vatican City.
+- IGO copy pass, merged evaluation state (hatched), EU endorsement as a lighter blue, labelled theme button with a real icon sprite.
+
 # DashElectrify - devlog
 
 Live: https://electrifysimon.github.io/dashelectrify/ (Staticrypt passphrase `electrify`).
