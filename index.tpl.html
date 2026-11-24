@@ -154,6 +154,16 @@ input[type=search]:focus,select:focus{border-color:var(--accent)}
 .tab:hover{color:var(--ink)}
 .tab:active{transform:scale(.97)}
 
+/* icons */
+.ic{width:16px;height:16px;flex:0 0 auto;fill:none;stroke:currentColor;stroke-width:1.75;
+  stroke-linecap:round;stroke-linejoin:round;vertical-align:-2px}
+.tab svg.ic{width:15px;height:15px;margin-right:7px;opacity:.9}
+.themebtn{display:inline-flex;align-items:center;gap:8px;background:var(--surface);border:0;
+  box-shadow:var(--e1);color:var(--ink);border-radius:10px;padding:0 14px;min-height:44px;
+  font-size:13px;cursor:pointer;font-family:inherit}
+.themebtn:hover{color:var(--accent)}
+.disclaimer{margin:14px 0 18px;max-width:96ch;color:var(--muted);font-size:11.5px;line-height:1.55}
+
 /* table */
 .tblwrap{background:var(--surface);border:0;border-radius:12px;overflow:auto;
   box-shadow:var(--e2);max-height:min(68vh,760px)}
@@ -431,6 +441,7 @@ tbody td{font-variant-numeric:tabular-nums}
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><symbol id="i-table-2" viewBox="0 0 24 24"><path d="M3 9h18" /> <path d="M9 3v18" /> <rect x="3" y="3" width="18" height="18" rx="2" /></symbol><symbol id="i-activity" viewBox="0 0 24 24"><path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2" /></symbol><symbol id="i-network" viewBox="0 0 24 24"><rect x="16" y="16" width="6" height="6" rx="1" /> <rect x="2" y="16" width="6" height="6" rx="1" /> <rect x="9" y="2" width="6" height="6" rx="1" /> <path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3" /> <path d="M12 12V8" /></symbol><symbol id="i-calendar-check" viewBox="0 0 24 24"><path d="M8 2v3" /> <path d="M16 2v3" /> <rect x="3" y="3" width="18" height="18" rx="2" /> <path d="M3 9h18" /> <path d="m9 15 2 2 4-4" /></symbol><symbol id="i-chart-column" viewBox="0 0 24 24"><path d="M3 3v16a2 2 0 0 0 2 2h16" /> <path d="M18 17V9" /> <path d="M13 17V5" /> <path d="M8 17v-3" /></symbol><symbol id="i-cpu" viewBox="0 0 24 24"><path d="M12 20v2" /> <path d="M12 2v2" /> <path d="M17 20v2" /> <path d="M17 2v2" /> <path d="M2 12h2" /> <path d="M2 17h2" /> <path d="M2 7h2" /> <path d="M20 12h2" /> <path d="M20 17h2" /> <path d="M20 7h2" /> <path d="M7 20v2" /> <path d="M7 2v2" /> <rect x="4" y="4" width="16" height="16" rx="2" /> <rect x="8" y="8" width="8" height="8" rx="1" /></symbol><symbol id="i-globe-2" viewBox="0 0 24 24"><path d="M21.54 15H17a2 2 0 0 0-2 2v4.54" /> <path d="M7 3.34V5a3 3 0 0 0 3 3a2 2 0 0 1 2 2c0 1.1.9 2 2 2a2 2 0 0 0 2-2c0-1.1.9-2 2-2h3.17" /> <path d="M11 21.95V18a2 2 0 0 0-2-2a2 2 0 0 1-2-2v-1a2 2 0 0 0-2-2H2.05" /> <circle cx="12" cy="12" r="10" /></symbol><symbol id="i-plug-zap" viewBox="0 0 24 24"><path d="M6.3 20.3a2.4 2.4 0 0 0 3.4 0L12 18l-6-6-2.3 2.3a2.4 2.4 0 0 0 0 3.4Z" /> <path d="m2 22 3-3" /> <path d="M7.5 13.5 10 11" /> <path d="M10.5 16.5 13 14" /> <path d="m18 3-4 4h6l-4 4" /></symbol><symbol id="i-gauge" viewBox="0 0 24 24"><path d="m12 14 4-4" /> <path d="M3.34 19a10 10 0 1 1 17.32 0" /></symbol><symbol id="i-trending-down" viewBox="0 0 24 24"><path d="M16 17h6v-6" /> <path d="m22 17-8.5-8.5-5 5L2 7" /></symbol><symbol id="i-triangle-alert" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3" /> <path d="M12 9v4" /> <path d="M12 17h.01" /></symbol><symbol id="i-download" viewBox="0 0 24 24"><path d="M12 15V3" /> <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /> <path d="m7 10 5 5 5-5" /></symbol><symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" /> <path d="M12 2v2" /> <path d="M12 20v2" /> <path d="m4.93 4.93 1.41 1.41" /> <path d="m17.66 17.66 1.41 1.41" /> <path d="M2 12h2" /> <path d="M20 12h2" /> <path d="m6.34 17.66-1.41 1.41" /> <path d="m19.07 4.93-1.41 1.41" /></symbol><symbol id="i-moon" viewBox="0 0 24 24"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401" /></symbol><symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18" /> <path d="m6 6 12 12" /></symbol><symbol id="i-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34" /> <circle cx="11" cy="11" r="8" /></symbol><symbol id="i-layers" viewBox="0 0 24 24"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z" /> <path d="M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12" /> <path d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17" /></symbol><symbol id="i-external-link" viewBox="0 0 24 24"><path d="M15 3h6v6" /> <path d="M10 14 21 3" /> <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /></symbol><symbol id="i-map-pin" viewBox="0 0 24 24"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0" /> <circle cx="12" cy="10" r="3" /></symbol><symbol id="i-arrow-up-right" viewBox="0 0 24 24"><path d="M7 7h10v10" /> <path d="M7 17 17 7" /></symbol></svg>
 <canvas id="bgfx" aria-hidden="true"></canvas>
 <div id="grain" aria-hidden="true"></div>
 
@@ -439,12 +450,12 @@ tbody td{font-variant-numeric:tabular-nums}
     <div class="brand"><span class="mark" aria-hidden="true">DE</span>
       <div class="brand-text">
         <h1>DashElectrify</h1>
-        <p class="subtitle">The COP31 35-by-35 electrification pledge, country by country</p>
+        <p class="subtitle">Signatories to the COP31 global electrification pledge, with economic, electricity access and renewable energy indicators</p>
       </div>
     </div>
-    <div class="masthead-right">
-      <button class="iconbtn" id="theme" aria-label="Switch theme" title="Switch theme"><svg class="ic"><use href="#i-sun"></use></svg></button>
-    </div>
+    <button class="themebtn" id="theme" aria-label="Switch to light theme">
+      <span id="theme-i" aria-hidden="true"><svg class="ic"><use href="#i-moon"></use></svg></span><span id="theme-t">Light</span>
+    </button>
   </header>
 
   <section class="kpis" id="kpis" aria-label="Headline numbers"></section>
@@ -461,17 +472,19 @@ tbody td{font-variant-numeric:tabular-nums}
     </div>
     <div class="legend" id="legend"></div>
     <div class="maptip" id="maptip"></div>
-    <div class="mapnote" id="mapnote">Hover a country for economy, access and renewables. Click to pin it in the table.</div>
+    <div class="mapnote" id="mapnote">Select a country to display its indicators. A second selection fixes the country in the table.</div>
   </section>
 
+  <p class="disclaimer">The designations employed and the presentation of materials herein do not imply the expression of any opinion on the part of IRENA concerning the legal status of any region, country, territory, city or area or of its authorities, or concerning the delimitation of frontiers or boundaries.</p>
+
   <nav class="tabs" role="tablist" aria-label="Views">
-    <button class="tab" id="tab-country" role="tab" aria-selected="false" aria-controls="country">Country</button>
-    <button class="tab on" id="tab-econ" role="tab" aria-selected="true" aria-controls="econ">Economics</button>
-    <button class="tab" id="tab-access" role="tab" aria-selected="false" aria-controls="access">Electricity access</button>
-    <button class="tab" id="tab-renew" role="tab" aria-selected="false" aria-controls="renew">Renewables</button>
-    <button class="tab" id="tab-weto" role="tab" aria-selected="false" aria-controls="weto">WETO pathways</button>
-    <button class="tab" id="tab-table" role="tab" aria-selected="false" aria-controls="tblwrap">Table</button>
-    <button class="tab" id="tab-plans" role="tab" aria-selected="false" aria-controls="plans">National Plans</button>
+    <button class="tab on" id="tab-table" role="tab" aria-selected="true" aria-controls="tblwrap"><svg class="ic" aria-hidden="true"><use href="#i-table-2"></use></svg>Table</button>
+    <button class="tab" id="tab-country" role="tab" aria-selected="false" aria-controls="country"><svg class="ic" aria-hidden="true"><use href="#i-globe-2"></use></svg>Country</button>
+    <button class="tab" id="tab-econ" role="tab" aria-selected="false" aria-controls="econ"><svg class="ic" aria-hidden="true"><use href="#i-chart-column"></use></svg>Economics</button>
+    <button class="tab" id="tab-access" role="tab" aria-selected="false" aria-controls="access"><svg class="ic" aria-hidden="true"><use href="#i-plug-zap"></use></svg>Electricity access</button>
+    <button class="tab" id="tab-renew" role="tab" aria-selected="false" aria-controls="renew"><svg class="ic" aria-hidden="true"><use href="#i-activity"></use></svg>Renewables</button>
+    <button class="tab" id="tab-weto" role="tab" aria-selected="false" aria-controls="weto"><svg class="ic" aria-hidden="true"><use href="#i-trending-down"></use></svg>WETO pathways</button>
+    <button class="tab" id="tab-plans" role="tab" aria-selected="false" aria-controls="plans"><svg class="ic" aria-hidden="true"><use href="#i-calendar-check"></use></svg>National Plans</button>
   </nav>
 
 
@@ -484,52 +497,52 @@ tbody td{font-variant-numeric:tabular-nums}
     </div>
     <div class="chartgrid">
       <div class="card wide"><h3 id="mixtitle">Electricity mix</h3><p class="note">Share of electricity generated from fossil fuels, renewables and nuclear. Source: Ember (2026), processed by Our World in Data.</p><div class="cv" id="c-mix"></div></div>
-      <div class="card"><h3>Electrify</h3><div class="kv" id="k-electrify"></div></div>
+      <div class="card"><h3>Electrification</h3><div class="kv" id="k-electrify"></div></div>
       <div class="card"><h3>Renewables</h3><div class="kv" id="k-renew"></div></div>
       <div class="card"><h3>Grids</h3><div class="kv" id="k-grid"></div></div>
       <div class="card"><h3>National plans</h3><div id="k-plans"></div></div>
     </div>
   </section>
-  <section id="econ" class="charts" role="tabpanel" aria-labelledby="tab-econ" tabindex="0">
+  <section id="econ" class="charts" role="tabpanel" aria-labelledby="tab-econ" tabindex="0" hidden>
     <div class="chartgrid">
-      <div class="card"><h3>Income and access move together</h3><p class="note">GDP per capita, log scale, against the share of people with electricity. Bubble area is population. Signatories in blue.</p><div class="cv" id="c-scatter"></div></div>
-      <div class="card"><h3>What the signatories weigh</h3><p class="note">Share of world population and world GDP covered by the pledge, against the rest.</p><div class="cv" id="c-weight"></div></div>
+      <div class="card"><h3>Income and access are closely associated</h3><p class="note">GDP per capita on a logarithmic scale against the share of the population with access to electricity. Bubble area represents population. Signatories are shown in blue.</p><div class="cv" id="c-scatter"></div></div>
+      <div class="card"><h3>Share of world population and GDP covered by the pledge</h3><p class="note">Share of world population and of world GDP covered by the pledge, compared with the remainder.</p><div class="cv" id="c-weight"></div></div>
       <div class="card"><h3>GDP per capita by pledge status</h3><p class="note">Median, with the interquartile range as a band.</p><div class="cv" id="c-gdpstat"></div></div>
-      <div class="card"><h3>Population and income, top signatories</h3><p class="note">The fifteen largest signatory economies.</p><div class="cv" id="c-topsign"></div></div>
+      <div class="card"><h3>Population and income, fifteen largest signatories</h3><p class="note">The fifteen largest signatory economies, by GDP.</p><div class="cv" id="c-topsign"></div></div>
     </div>
   </section>
 
   <section id="access" class="charts" role="tabpanel" aria-labelledby="tab-access" tabindex="0" hidden>
     <div class="chartgrid">
-      <div class="card"><h3>Where the unserved live</h3><p class="note">People without electricity, fifteen largest. Blue means the country has signed.</p><div class="cv tall" id="c-unserved"></div></div>
-      <div class="card"><h3>World access has climbed, slowly</h3><p class="note">Population-weighted access rate, World Bank series.</p><div class="cv tall" id="c-trend"></div></div>
-      <div class="card"><h3>The rural gap</h3><p class="note">National, urban and rural access for twenty signatories with the widest rural gap.</p><div class="cv" id="c-rural"></div></div>
-      <div class="card"><h3>Access distribution</h3><p class="note">How many countries sit in each access band, signed against not signed.</p><div class="cv" id="c-bands"></div></div>
+      <div class="card"><h3>Distribution of the population without access to electricity</h3><p class="note">The fifteen largest populations without access to electricity. Blue indicates a signatory.</p><div class="cv tall" id="c-unserved"></div></div>
+      <div class="card"><h3>World access to electricity over time</h3><p class="note">Population-weighted access rate. World Bank series.</p><div class="cv tall" id="c-trend"></div></div>
+      <div class="card"><h3>Urban and rural access, twenty signatories with the widest gap</h3><p class="note">National, urban and rural access rates for the twenty signatories with the widest rural gap.</p><div class="cv" id="c-rural"></div></div>
+      <div class="card"><h3>Distribution of countries by access band</h3><p class="note">Number of countries in each access band, signatories against non-signatories.</p><div class="cv" id="c-bands"></div></div>
     </div>
   </section>
 
   <section id="renew" class="charts" role="tabpanel" aria-labelledby="tab-renew" tabindex="0" hidden>
     <div class="chartgrid">
       <div class="card"><h3>Renewables in final energy</h3><p class="note">Share of final energy consumption from renewables, fifteen leaders.</p><div class="cv tall" id="c-renewsign"></div></div>
-      <div class="card"><h3>Renewable electricity share</h3><p class="note">Median by pledge status, latest year.</p><div class="cv tall" id="c-renelec"></div></div>
-      <div class="card"><h3>Renewables against access</h3><p class="note">Renewable electricity share against access rate. Signatories in blue.</p><div class="cv" id="c-renscatter"></div></div>
-      <div class="card"><h3>Where the pledge adds most</h3><p class="note">Signatories with the lowest renewable share in final energy.</p><div class="cv" id="c-renlag"></div></div>
-      <div class="card"><h3>2030 renewable capacity targets</h3><p class="note">National 2030 targets among pledge signatories, eighteen largest. Hover for the share target.</p><div class="cv" id="c-rentarget"></div></div>
+      <div class="card"><h3>Renewable share of electricity generation</h3><p class="note">Median by pledge status, latest available year.</p><div class="cv tall" id="c-renelec"></div></div>
+      <div class="card"><h3>Renewable share against access rate</h3><p class="note">Renewable share of electricity against the access rate. Signatories are shown in blue.</p><div class="cv" id="c-renscatter"></div></div>
+      <div class="card"><h3>Signatories with the lowest renewable share in final energy</h3><p class="note">The ten signatories with the lowest renewable share in final energy consumption.</p><div class="cv" id="c-renlag"></div></div>
+      <div class="card"><h3>National renewable capacity targets, 2030</h3><p class="note">National 2030 capacity targets among signatories, eighteen largest. The share target is displayed on hover.</p><div class="cv" id="c-rentarget"></div></div>
     </div>
   </section>
 
   <section id="weto" class="charts" role="tabpanel" aria-labelledby="tab-weto" tabindex="0" hidden>
     <div class="chartgrid">
-      <div class="card"><h3>Electrification by end use</h3><p class="note">IRENA WETO 2026, 1.5C Scenario, share of each sector running on electricity.</p><div class="cv" id="c-weto-line"></div></div>
-      <div class="card"><h3>Electrification rate, buildings</h3><p class="note">IRENA WETO 2026. Global, G20, non-G20 and regions.</p><div class="cv" id="c-weto-bar"></div></div>
+      <div class="card"><h3>Share of end-use sectors electrified</h3><p class="note">IRENA WETO 2026, 1.5 degrees scenario. Share of energy use in each sector provided by electricity.</p><div class="cv" id="c-weto-line"></div></div>
+      <div class="card"><h3>Electrification rate in buildings</h3><p class="note">IRENA WETO 2026. World, G20, non-G20 and regions.</p><div class="cv" id="c-weto-bar"></div></div>
       <div class="card"><h3>Cumulative renewable investment by region</h3><p class="note">IRENA WETO 2026, USD trillion. The nine regions sum to the printed global 41.7.</p><div class="cv tall" id="c-weto-donut"></div></div>
-      <div class="card"><h3>Transport electrification is the steep one</h3><p class="note">From 1 percent in 2023 to 47 percent in 2050 under the 1.5C pathway.</p><div class="cv" id="c-weto-transport"></div></div>
+      <div class="card"><h3>Electrification of transport</h3><p class="note">From 1 per cent in 2023 to 47 per cent in 2050 under the 1.5 degrees pathway.</p><div class="cv" id="c-weto-transport"></div></div>
     </div>
   </section>
 
-  <div class="tblwrap" id="tblwrap" role="tabpanel" aria-labelledby="tab-table" tabindex="0" hidden>
+  <div class="tblwrap" id="tblwrap" role="tabpanel" aria-labelledby="tab-table" tabindex="0">
     <table id="tbl">
-      <caption id="cap">Every country with a pledge status or a World Bank record. Click a header to sort.</caption>
+      <caption id="cap">All countries with a pledge status or a World Bank record. Select a column heading to sort.</caption>
       <thead id="thead"></thead><tbody id="tbody"></tbody>
     </table>
   </div>
@@ -542,7 +555,7 @@ tbody td{font-variant-numeric:tabular-nums}
       <span class="sub" id="pcount"></span>
     </div>
     <table id="ptbl">
-      <caption id="pcap">National electrification plans, roadmaps and strategies published in the run-up to COP31. Click a header to sort.</caption>
+      <caption id="pcap">National electrification plans, roadmaps and strategies published in the run-up to COP31. Select a column heading to sort.</caption>
       <thead id="pthead"></thead><tbody id="ptbody"></tbody>
     </table>
   </div>
@@ -563,7 +576,7 @@ const fmtMil = n => n == null ? "-" : (n >= 1e9 ? (n / 1e9).toFixed(2) + "bn" : 
 const fmtPct = (n, d = 1) => n == null ? "-" : n.toFixed(d) + "%";
 const fmtUsd = n => n == null ? "-" : n >= 1e12 ? "$" + (n / 1e12).toFixed(1) + "tn" : n >= 1e9 ? "$" + (n / 1e9).toFixed(0) + "bn" : "$" + fmtInt(n);
 const statusOf = v => v.pledge === "signed" ? (v.pledge_source === "eu" ? "eu" : "national")
-  : (v.pledge === "likely" || v.pledge === "considering") ? v.pledge : "none";
+  : (v.pledge === "likely" || v.pledge === "considering") ? "evaluation" : "none";
 const median = a => { if (!a.length) return null; const s = [...a].sort((x, y) => x - y); const m = s.length >> 1; return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; };
 const q = (a, p) => { if (!a.length) return null; const s = [...a].sort((x, y) => x - y); const i = (s.length - 1) * p, lo = Math.floor(i), hi = Math.ceil(i); return s[lo] + (s[hi] - s[lo]) * (i - lo); };
 
@@ -572,10 +585,10 @@ function buildKpis() {
   const popShare = AGG.share_pop, gdpShare = AGG.share_gdp;
   const cards = [
     ["Signatories", fmtInt(AGG.total_signed), `${AGG.signatories} national endorsements, ${AGG.eu_covered} covered by the EU endorsement`],
-    ["People covered", fmtMil(AGG.pop_signed), fmtPct(popShare * 100, 1) + " of the world population"],
+    ["Population covered", fmtMil(AGG.pop_signed), fmtPct(popShare * 100, 1) + " of the world population"],
     ["Economies covered", fmtUsd(AGG.gdp_signed), fmtPct(gdpShare * 100, 1) + " of world GDP, current USD"],
-    ["Without electricity", fmtMil(AGG.unserved_signed), "inside the signatory countries, " + fmtPct(AGG.unserved_signed / AGG.unserved_world * 100, 0) + " of the global unserved"],
-    ["Likely or considering", fmtInt(AGG.likely + AGG.considering), `${AGG.likely} likely, ${AGG.considering} considering`],
+    ["Population without access", fmtMil(AGG.unserved_signed), "in the signatory countries, " + fmtPct(AGG.unserved_signed / AGG.unserved_world * 100, 0) + " of the world total"],
+    ["Under evaluation", fmtInt(AGG.likely + AGG.considering), "Governments that have signalled an intention to join"],
   ];
   $("#kpis").innerHTML = cards.map(([l, n, s]) =>
     `<div class="kpi"><div class="l">${l}</div><div class="n">${n}</div><div class="sub2">${s}</div></div>`).join("");
@@ -592,10 +605,10 @@ const alpha = (hex, a) => {
   const n = parseInt(h, 16);
   return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${a})`;
 };
+const EUBLUE = "#8ec5ff";
 const statusColor = st => st === "national" ? cssVar("--accent")
-  : st === "eu" ? cssVar("--accent2")
-  : st === "likely" ? "#24508f"
-  : st === "considering" ? "#5d6b7f"
+  : st === "eu" ? EUBLUE
+  : st === "evaluation" ? "#24508f"
   : (document.documentElement.dataset.theme === "light" ? "#dbe3ee" : "#20304a");
 
 const px = lon => (lon + 180) / 360 * MW;
@@ -621,8 +634,7 @@ function drawMap() {
     const st = v ? statusOf(v) : "none";
     const dim = FILTER === "all" ? false : FILTER === "signed" ? st !== "national" : FILTER === "eu" ? st !== "eu" : st !== "none";
     const fill = st === "none" ? "url(#landFill)"
-      : st === "likely" ? "url(#hatchL)"
-      : st === "considering" ? "url(#hatchC)" : statusColor(st);
+      : st === "evaluation" ? "url(#hatchL)" : statusColor(st);
     parts.push(`<path class="cty${dim ? " dim" : ""}${st !== "none" ? " lit" : ""}" data-iso="${iso}" d="${geoPath(f.geometry)}"
       fill="${fill}" stroke="#0a1220" stroke-width=".55" stroke-linejoin="round"></path>`);
   }
@@ -687,11 +699,10 @@ function applyFilter(f) {
 
 function updateLegend() {
   $("#legend").innerHTML = `<div class="lg-t">Pledge status</div>
-    <div class="lg-k"><i style="background:${cssVar("--accent")}"></i>signed nationally <b>${AGG.signatories}</b></div>
-    <div class="lg-k"><i style="background:${cssVar("--accent2")}"></i>EU endorsement <b>${AGG.eu_covered}</b></div>
-    <div class="lg-k"><i class="hatchL"></i>likely <b>${AGG.likely}</b></div>
-    <div class="lg-k"><i class="hatchC"></i>considering <b>${AGG.considering}</b></div>
-    <div class="lg-k"><i style="background:${statusColor("none")}"></i>not a signatory</div>`;
+    <div class="lg-k"><i style="background:${statusColor("national")}"></i>Signed nationally <b>${AGG.signatories}</b></div>
+    <div class="lg-k"><i style="background:${statusColor("eu")}"></i>EU endorsement <b>${AGG.eu_covered}</b></div>
+    <div class="lg-k"><i class="hatchL"></i>Under evaluation <b>${AGG.likely + AGG.considering}</b></div>
+    <div class="lg-k"><i style="background:${statusColor("none")}"></i>Not a signatory</div>`;
 }
 
 /* ---------------------------------------------------------------- charts */
@@ -1024,8 +1035,8 @@ function buildPlans() {
   head.innerHTML = "<tr>" + PCOLS.map(c =>
     `<th data-k="${c.k}" class="${PSORT.k === c.k ? "on" : ""}">${c.t}</th>`).join("") + "</tr>";
   const rows = planRows();
-  const pl = p => p.pledge === "signed" ? (p.pledge_source === "eu" ? "EU endorsement" : "Signed")
-    : p.pledge === "likely" ? "Likely" : p.pledge === "considering" ? "Considering" : (p.iso ? "Not a signatory" : "EU bloc");
+  const pl = p => p.pledge === "signed" ? (p.pledge_source === "eu" ? "EU endorsement" : "Signed nationally")
+    : (p.pledge === "likely" || p.pledge === "considering") ? "Under evaluation" : (p.iso ? "Not a signatory" : "EU bloc");
   body.innerHTML = rows.map(p => `<tr>
     <td>${p.country_display || p.country || ""}</td>
     <td class="pledge ${p.pledge === "signed" ? "yes" : (p.pledge === "likely" || p.pledge === "considering") ? "maybe" : "no"}">${pl(p)}</td>
@@ -1054,8 +1065,8 @@ function buildPlans() {
 const MIX = DATA.mix_series || {};
 let CUR = null;
 
-const pledgeLabel = v => v.pledge === "signed" ? (v.pledge_source === "eu" ? "EU endorsement" : "Signed")
-  : v.pledge === "likely" ? "Likely" : v.pledge === "considering" ? "Considering" : "Not a signatory";
+const pledgeLabel = v => v.pledge === "signed" ? (v.pledge_source === "eu" ? "EU endorsement" : "Signed nationally")
+  : (v.pledge === "likely" || v.pledge === "considering") ? "Under evaluation" : "Not a signatory";
 
 function kvSet(el, rows) {
   if (!el) return;
@@ -1116,7 +1127,7 @@ function drawCountry(iso) {
       <div class="pmeta">${[p.regional ? "Regional (EU)" : null, p.category, p.status, p.date, p.publisher].filter(Boolean).join(" · ")}</div>
       ${p.source_url ? `<div class="pmeta"><a href="${p.source_url}" target="_blank" rel="noopener">Source document</a></div>` : ""}
     </div>`).join("")
-    : `<div class="pmeta">No entry in the national plans register for this country.</div>`;
+    : `<div class="pmeta">No entry has been identified in the register for this country.</div>`;
 
   $("#mixtitle").textContent = (v.name || iso) + " electricity mix";
 
@@ -1171,10 +1182,20 @@ function start() {
   drawMap();
   updateLegend();
   buildFoot();
-  showTab("econ");
+  showTab("tblwrap");
+  function syncThemeButton() {
+    const dark = document.documentElement.dataset.theme !== "light";
+    const i = document.getElementById("theme-i"), t = document.getElementById("theme-t");
+    if (i) i.innerHTML = `<svg class="ic"><use href="#${dark ? "i-moon" : "i-sun"}"></use></svg>`;
+    if (t) t.textContent = dark ? "Light" : "Dark";
+    const b = document.getElementById("theme");
+    if (b) b.setAttribute("aria-label", dark ? "Switch to light theme" : "Switch to dark theme");
+  }
+  syncThemeButton();
   document.getElementById("theme").addEventListener("click", () => {
     const el = document.documentElement;
     el.dataset.theme = el.dataset.theme === "light" ? "dark" : "light";
+    syncThemeButton();
     setTimeout(() => {
       drawMap(); updateLegend();
       const cur = PANELS.find(p => !document.getElementById(p).hidden);
