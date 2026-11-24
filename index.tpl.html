@@ -387,10 +387,14 @@ tbody td{font-variant-numeric:tabular-nums}
 .mapwrap .legend .lg-t{color:var(--muted);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}
 
 /* ---- country tab ---- */
+#plans table{white-space:nowrap}
+#plans td:nth-child(2){white-space:normal;min-width:320px;max-width:540px}
+#plans td:nth-child(6){white-space:normal;max-width:200px}
+#plans th, #plans td{padding-left:14px;padding-right:14px}
 #country.charts{grid-template-columns:1fr}
 .ctrybar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:0 0 16px}
 .ctrybar label{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-.ctrybar select{background:var(--surface2);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:8px 12px;font-size:14px;min-width:240px}
+.ctrybar input,.ctrybar select{background:var(--surface2);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:8px 12px;font-size:14px;min-width:240px}
 .ctrybar .badge{font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:4px 9px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
 .ctrybar .badge.signed{color:var(--accent);border-color:var(--accent)}
 .ctrybar .badge.eu{color:var(--accent2);border-color:var(--accent2)}
@@ -454,6 +458,7 @@ tbody td{font-variant-numeric:tabular-nums}
     <button class="tab" id="tab-renew" role="tab" aria-selected="false" aria-controls="renew">Renewables</button>
     <button class="tab" id="tab-weto" role="tab" aria-selected="false" aria-controls="weto">WETO pathways</button>
     <button class="tab" id="tab-table" role="tab" aria-selected="false" aria-controls="tblwrap">Table</button>
+    <button class="tab" id="tab-plans" role="tab" aria-selected="false" aria-controls="plans">Plans</button>
   </nav>
 
 
@@ -470,7 +475,6 @@ tbody td{font-variant-numeric:tabular-nums}
       <div class="card"><h3>Renewables</h3><div class="kv" id="k-renew"></div></div>
       <div class="card"><h3>Grids</h3><div class="kv" id="k-grid"></div></div>
       <div class="card"><h3>National plans</h3><div id="k-plans"></div></div>
-      <div class="card wide"><h3>National electrification plans register</h3><p class="note">Every plan, roadmap and strategy tracked, with the publisher and the source document.</p><div id="k-register" class="planlist"></div></div>
     </div>
   </section>
   <section id="econ" class="charts" role="tabpanel" aria-labelledby="tab-econ" tabindex="0">
@@ -517,6 +521,18 @@ tbody td{font-variant-numeric:tabular-nums}
     </table>
   </div>
 
+
+  <div class="tblwrap" id="plans" role="tabpanel" aria-labelledby="tab-plans" tabindex="0" hidden>
+    <div class="ctrybar" style="padding:14px 16px 0">
+      <label for="psearch">Filter</label>
+      <input id="psearch" type="search" placeholder="Country, plan or publisher">
+      <span class="sub" id="pcount"></span>
+    </div>
+    <table id="ptbl">
+      <caption id="pcap">National electrification plans, roadmaps and strategies published in the run-up to COP31. Click a header to sort.</caption>
+      <thead id="pthead"></thead><tbody id="ptbody"></tbody>
+    </table>
+  </div>
   <footer class="foot" id="foot"></footer>
 </div>
 
@@ -923,7 +939,7 @@ function buildTable() {
 }
 
 /* ------------------------------------------------------------------- tabs */
-const PANELS = ["country", "econ", "access", "renew", "weto", "tblwrap"];
+const PANELS = ["country", "econ", "access", "renew", "weto", "tblwrap", "plans"];
 function showTab(id) {
   PANELS.forEach(p => { const el = document.getElementById(p); if (el) el.hidden = p !== id; });
   document.querySelectorAll(".tab").forEach(b => { const on = b.getAttribute("aria-controls") === id; b.classList.toggle("on", on); b.setAttribute("aria-selected", on); });
@@ -933,9 +949,60 @@ function showTab(id) {
   if (id === "renew") drawRenew();
   if (id === "weto") drawWeto();
   if (id === "tblwrap") buildTable();
+  if (id === "plans") buildPlans();
   setTimeout(resizeAll, 60);
 }
 
+
+
+/* ------------------------------------------------------------- plans tab */
+const PCOLS = [
+  {k: "country", t: "Country"}, {k: "document", t: "Plan"}, {k: "category", t: "Category"},
+  {k: "status", t: "Status"}, {k: "date", t: "Date"}, {k: "publisher", t: "Publisher"},
+  {k: "source_url", t: "Source"},
+];
+let PSORT = {k: "country", d: 1};
+let PFILTER = "";
+
+function planRows() {
+  const q = PFILTER.toLowerCase();
+  return (DATA.plans || [])
+    .filter(p => !q || [p.country, p.document, p.publisher, p.category, p.status]
+      .join(" ").toLowerCase().includes(q))
+    .sort((a, b) => {
+      const av = (a[PSORT.k] || "").toString(), bv = (b[PSORT.k] || "").toString();
+      return av.localeCompare(bv) * PSORT.d;
+    });
+}
+
+function buildPlans() {
+  const head = $("#pthead"), body = $("#ptbody");
+  if (!head || !body) return;
+  head.innerHTML = "<tr>" + PCOLS.map(c =>
+    `<th data-k="${c.k}" class="${PSORT.k === c.k ? "on" : ""}">${c.t}</th>`).join("") + "</tr>";
+  const rows = planRows();
+  body.innerHTML = rows.map(p => `<tr>
+    <td>${p.country || ""}</td>
+    <td>${p.document || p.category || ""}</td>
+    <td>${p.category || ""}</td>
+    <td>${p.status || ""}</td>
+    <td class="num">${p.date || ""}</td>
+    <td>${p.publisher || ""}</td>
+    <td>${p.source_url ? `<a href="${p.source_url}" target="_blank" rel="noopener">open</a>` : "-"}</td>
+  </tr>`).join("");
+  const pc = $("#pcount");
+  if (pc) pc.textContent = rows.length + " of " + (DATA.plans || []).length + " entries";
+  head.querySelectorAll("th").forEach(th => th.onclick = () => {
+    const k = th.dataset.k;
+    PSORT = {k, d: PSORT.k === k ? -PSORT.d : 1};
+    buildPlans();
+  });
+  const inp = $("#psearch");
+  if (inp && !inp.dataset.bound) {
+    inp.dataset.bound = "1";
+    inp.oninput = () => { PFILTER = inp.value; buildPlans(); };
+  }
+}
 
 /* ------------------------------------------------------------ country tab */
 const MIX = DATA.mix_series || {};
@@ -1037,17 +1104,6 @@ function drawCountry(iso) {
   sel.value = CUR;
   sel.onchange = () => drawCountry(sel.value);
 
-  const reg = $("#k-register");
-  if (reg) {
-    const rows = (DATA.plans || []).slice().sort((a, b) =>
-      (a.country || "").localeCompare(b.country || ""));
-    reg.innerHTML = rows.map(p => `
-      <div class="plan">
-        <div class="ptitle">${p.country || ""} - ${p.document || p.category || "Plan"}</div>
-        <div class="pmeta">${[p.category, p.status, p.date, p.publisher].filter(Boolean).join(" · ")}
-        ${p.source_url ? ` · <a href="${p.source_url}" target="_blank" rel="noopener">source</a>` : ""}</div>
-      </div>`).join("");
-  }
 })();
 
 /* ----------------------------------------------------------------- footer */
