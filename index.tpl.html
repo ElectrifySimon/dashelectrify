@@ -395,7 +395,8 @@ tbody td{font-variant-numeric:tabular-nums}
 #c-map .cty.dim{opacity:.18}
 #c-map .dot{pointer-events:all}
 .mapwrap{position:relative;border-radius:16px;overflow:hidden;box-shadow:var(--e2);background:#0a1220}
-#c-map svg{display:block;width:100%;height:auto}
+#c-map svg{display:block;width:100%;height:auto;cursor:grab;touch-action:none}
+#c-map svg.drag{cursor:grabbing}
 .cty{transition:fill .18s var(--e-out),stroke .18s var(--e-out)}
 .cty.lit{filter:drop-shadow(0 1px 0 rgba(255,255,255,.10))}
 .cty:hover{stroke:var(--ink);stroke-width:1.2}
@@ -692,6 +693,58 @@ function drawMap() {
     el.addEventListener("mousemove", ev => showTip(ev, el.dataset.iso));
     el.addEventListener("mouseleave", hideTip);
   });
+  wireMapZoom(host.querySelector("svg"));
+}
+
+/* pan and zoom for the choropleth */
+function wireMapZoom(svg) {
+  if (!svg) return;
+  const VB = {x: 0, y: 0, w: MW, h: MH};
+  const MIN = MW / 9;
+  let drag = null;
+  const apply = () => svg.setAttribute("viewBox", `${VB.x} ${VB.y} ${VB.w} ${VB.h}`);
+  const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+  const toLocal = (ev) => {
+    const r = svg.getBoundingClientRect();
+    return {x: VB.x + (ev.clientX - r.left) / r.width * VB.w,
+            y: VB.y + (ev.clientY - r.top) / r.height * VB.h,
+            sx: r.width / VB.w, sy: r.height / VB.h};
+  };
+  const zoomAt = (px, py, k) => {
+    const nw = clamp(VB.w * k, MIN, MW);
+    const nh = nw * (MH / MW);
+    VB.x = clamp(px - (px - VB.x) * (nw / VB.w), 0, MW - nw);
+    VB.y = clamp(py - (py - VB.y) * (nh / VB.h), 0, MH - nh);
+    VB.w = nw; VB.h = nh; apply();
+  };
+  svg.addEventListener("wheel", (ev) => {
+    ev.preventDefault();
+    const p = toLocal(ev);
+    zoomAt(p.x, p.y, Math.exp(ev.deltaY * 0.0011));
+  }, {passive: false});
+  svg.addEventListener("pointerdown", (ev) => {
+    if (ev.button !== 0) return;
+    drag = {cx: ev.clientX, cy: ev.clientY, x: VB.x, y: VB.y};
+    svg.classList.add("drag"); svg.setPointerCapture(ev.pointerId);
+  });
+  svg.addEventListener("pointermove", (ev) => {
+    if (!drag) return;
+    const r = svg.getBoundingClientRect();
+    VB.x = clamp(drag.x - (ev.clientX - drag.cx) / r.width * VB.w, 0, MW - VB.w);
+    VB.y = clamp(drag.y - (ev.clientY - drag.cy) / r.height * VB.h, 0, MH - VB.h);
+    apply();
+  });
+  const end = (ev) => {
+    if (!drag) return;
+    drag = null; svg.classList.remove("drag");
+    try { svg.releasePointerCapture(ev.pointerId); } catch (e) {}
+  };
+  svg.addEventListener("pointerup", end);
+  svg.addEventListener("pointercancel", end);
+  svg.addEventListener("dblclick", () => {
+    VB.x = 0; VB.y = 0; VB.w = MW; VB.h = MH; apply();
+  });
+  apply();
 }
 
 function showTip(ev, iso) {
