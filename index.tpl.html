@@ -883,7 +883,7 @@ function buildFoot() {
   $("#foot").innerHTML = `
     <p class="footmeta">${Object.keys(C).length} countries monitored &middot; pledge as of ${DATA.meta.pledge_as_of} &middot; WDI last updated ${DATA.meta.wdi_last_updated} &middot; published ${"__BUILD_DATE__"} &middot; CC BY 4.0</p>
     <div class="footgrid">
-      <div><h4>Pledge</h4><p>COP31 Presidency pledge registry, status as of 23 November 2026. ${AGG.signatories} national endorsements and ${AGG.eu_covered} countries covered by the EU endorsement.</p></div>
+      <div><h4>Pledge</h4><p>Source: COP31 Presidency, Electrify Now</p></div>
       <div><h4>Economy and access</h4><p>World Bank World Development Indicators: GDP current USD, GDP per capita, population, access to electricity, urban and rural access, renewable share of final energy and of electricity. Latest year per series.</p></div>
       <div><h4>Pathways</h4><p>IRENA, World Energy Transitions Outlook 2026, 1.5C Scenario. Figures 1.4, 2.1 and 2.3, redrawn from the published report.</p></div>
       <div><h4>Machine-readable</h4><p><a href="data/dashboard.json">data/dashboard.json</a> carries every field on this page. Boundaries: Natural Earth 110m, public domain.</p></div>
