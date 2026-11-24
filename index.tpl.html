@@ -453,7 +453,7 @@ tbody td{font-variant-numeric:tabular-nums}
       <div class="card"><h3>Renewable electricity share</h3><p class="note">Median by pledge status, latest year.</p><div class="cv tall" id="c-renelec"></div></div>
       <div class="card"><h3>Renewables against access</h3><p class="note">Renewable electricity share against access rate. Signatories in blue.</p><div class="cv" id="c-renscatter"></div></div>
       <div class="card"><h3>Where the pledge adds most</h3><p class="note">Signatories with the lowest renewable share in final energy.</p><div class="cv" id="c-renlag"></div></div>
-      <div class="card"><h3>2030 renewable capacity targets</h3><p class="note">National targets for 2030, eighteen largest. Hover for the share target.</p><div class="cv" id="c-rentarget"></div></div>
+      <div class="card"><h3>2030 renewable capacity targets</h3><p class="note">National 2030 targets among pledge signatories, eighteen largest. Hover for the share target.</p><div class="cv" id="c-rentarget"></div></div>
     </div>
   </section>
 
@@ -789,7 +789,7 @@ function drawRenew() {
     label: {show: true, position: "right", color: cssVar("--muted"), fontSize: 10, formatter: p => p.value.toFixed(0) + "%"}}];
   chart("c-renlag", l);
 
-  const tg = ROWS.filter(v => v.res_target_gw != null).sort((a, b) => b.res_target_gw - a.res_target_gw).slice(0, 18).reverse();
+  const tg = ROWS.filter(v => v.pledge === "signed" && v.res_target_gw != null).sort((a, b) => b.res_target_gw - a.res_target_gw).slice(0, 18).reverse();
   const q = baseOpt();
   q.grid = {left: 8, right: 70, top: 10, bottom: 10, containLabel: true};
   q.xAxis = Object.assign(q.xAxis, {type: "value", axisLabel: {color: cssVar("--muted"), fontSize: 10, formatter: "{value} GW"}});
