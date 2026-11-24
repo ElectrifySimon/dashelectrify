@@ -121,7 +121,9 @@ select{cursor:pointer;max-width:100%}
 .legend .lg-t{color:var(--ink);font-weight:600;font-size:12px;margin-bottom:6px}
 .legend .lg-bar{height:8px;border-radius:5px;margin:0 0 4px}
 .legend .lg-r{display:flex;justify-content:space-between;font-size:11px;font-variant-numeric:tabular-nums}
-.legend .lg-k b{color:var(--ink);font-weight:600;margin-left:6px;font-variant-numeric:tabular-nums}
+.legend .lg-k i.hatchL{background:repeating-linear-gradient(35deg,#24508f 0 3px,#6b9ede 3px 5px)}
+.lg-k i.hatchC{background:repeating-linear-gradient(35deg,#3d4657 0 3px,#8b98ab 3px 5px)}
+.lg-k b{color:var(--ink);font-weight:600;margin-left:6px;font-variant-numeric:tabular-nums}
 .lg-k{display:flex;align-items:center;gap:7px;margin-top:7px;font-size:11px}
 .legend .lg-k i{width:16px;height:3px;border-radius:2px;display:inline-block}
 #panel{position:absolute;top:12px;right:12px;z-index:3;width:min(280px,calc(100% - 24px));
@@ -618,7 +620,9 @@ function drawMap() {
     const v = C[iso];
     const st = v ? statusOf(v) : "none";
     const dim = FILTER === "all" ? false : FILTER === "signed" ? st !== "national" : FILTER === "eu" ? st !== "eu" : st !== "none";
-    const fill = st === "none" ? "url(#landFill)" : statusColor(st);
+    const fill = st === "none" ? "url(#landFill)"
+      : st === "likely" ? "url(#hatchL)"
+      : st === "considering" ? "url(#hatchC)" : statusColor(st);
     parts.push(`<path class="cty${dim ? " dim" : ""}${st !== "none" ? " lit" : ""}" data-iso="${iso}" d="${geoPath(f.geometry)}"
       fill="${fill}" stroke="#0a1220" stroke-width=".55" stroke-linejoin="round"></path>`);
   }
@@ -636,6 +640,14 @@ function drawMap() {
       <linearGradient id="landFill" x1="0" y1="0" x2="0" y2="1">
         <stop offset="0%" stop-color="#2a3d59"/><stop offset="100%" stop-color="#1d2b41"/>
       </linearGradient>
+      <pattern id="hatchL" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(35)">
+        <rect width="6" height="6" fill="#24508f"/>
+        <line x1="0" y1="0" x2="0" y2="6" stroke="#6b9ede" stroke-width="2" stroke-opacity=".55"/>
+      </pattern>
+      <pattern id="hatchC" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(35)">
+        <rect width="6" height="6" fill="#3d4657"/>
+        <line x1="0" y1="0" x2="0" y2="6" stroke="#8b98ab" stroke-width="2" stroke-opacity=".5"/>
+      </pattern>
       <radialGradient id="vig" cx="50%" cy="48%" r="58%">
         <stop offset="62%" stop-color="rgba(0,0,0,0)"/><stop offset="100%" stop-color="rgba(0,0,0,.55)"/>
       </radialGradient>
@@ -677,8 +689,8 @@ function updateLegend() {
   $("#legend").innerHTML = `<div class="lg-t">Pledge status</div>
     <div class="lg-k"><i style="background:${cssVar("--accent")}"></i>signed nationally <b>${AGG.signatories}</b></div>
     <div class="lg-k"><i style="background:${cssVar("--accent2")}"></i>EU endorsement <b>${AGG.eu_covered}</b></div>
-    <div class="lg-k"><i style="background:${statusColor("likely")}"></i>likely <b>${AGG.likely}</b></div>
-    <div class="lg-k"><i style="background:${statusColor("considering")}"></i>considering <b>${AGG.considering}</b></div>
+    <div class="lg-k"><i class="hatchL"></i>likely <b>${AGG.likely}</b></div>
+    <div class="lg-k"><i class="hatchC"></i>considering <b>${AGG.considering}</b></div>
     <div class="lg-k"><i style="background:${statusColor("none")}"></i>not a signatory</div>`;
 }
 
