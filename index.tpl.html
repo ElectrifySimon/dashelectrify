@@ -24,8 +24,9 @@
    Values copied from the package theme.css; the DashDist shell consumes them. */
 :root[data-theme="dark"]{
   color-scheme:dark;
-  --bg:#070b13; --surface:#0d1522; --surface2:#131d2c; --line:#2a3a51;
-  --ink:#eef3fa; --muted:#93a4bc;
+  --bg:#0a1220; --surface:#111c2c; --surface2:#18253a; --line:#2f4460;
+  --ink:#edf3fc; --muted:#9db0c9;
+  --land:#22314b; --sea:#0a1220;
   --accent:#4a8cff; --accent-fill:#2f6fe0; --accent-ink:#f4f8ff;
   --accent2:#f0b45a;
   --warn:#f0b45a; --bad:#ff8f8f;
@@ -120,7 +121,8 @@ select{cursor:pointer;max-width:100%}
 .legend .lg-t{color:var(--ink);font-weight:600;font-size:12px;margin-bottom:6px}
 .legend .lg-bar{height:8px;border-radius:5px;margin:0 0 4px}
 .legend .lg-r{display:flex;justify-content:space-between;font-size:11px;font-variant-numeric:tabular-nums}
-.legend .lg-k{display:flex;align-items:center;gap:7px;margin-top:7px;font-size:11px}
+.legend .lg-k b{color:var(--ink);font-weight:600;margin-left:6px;font-variant-numeric:tabular-nums}
+.lg-k{display:flex;align-items:center;gap:7px;margin-top:7px;font-size:11px}
 .legend .lg-k i{width:16px;height:3px;border-radius:2px;display:inline-block}
 #panel{position:absolute;top:12px;right:12px;z-index:3;width:min(280px,calc(100% - 24px));
   background:var(--surface);border:0;
@@ -374,7 +376,12 @@ tbody td{font-variant-numeric:tabular-nums}
 #c-map .cty:hover{filter:brightness(1.25)}
 #c-map .cty.dim{opacity:.18}
 #c-map .dot{pointer-events:all}
-.mapwrap{position:relative}
+.mapwrap{position:relative;border-radius:16px;overflow:hidden;box-shadow:var(--e2);background:#0a1220}
+#c-map svg{display:block;width:100%;height:auto}
+.cty{transition:fill .18s var(--e-out),stroke .18s var(--e-out)}
+.cty.lit{filter:drop-shadow(0 1px 0 rgba(255,255,255,.10))}
+.cty:hover{stroke:var(--ink);stroke-width:1.2}
+.cty.dim{opacity:.26}
 .mapwrap .legend{left:16px;right:auto;bottom:16px;background:rgba(10,14,22,.92);border:1px solid rgba(255,255,255,.12);
   border-radius:12px;padding:10px 12px;backdrop-filter:blur(8px)}
 :root[data-theme="light"] .mapwrap .legend{background:rgba(255,255,255,.95);border-color:rgba(12,24,40,.12)}
@@ -585,8 +592,8 @@ const alpha = (hex, a) => {
 };
 const statusColor = st => st === "national" ? cssVar("--accent")
   : st === "eu" ? cssVar("--accent2")
-  : st === "likely" ? alpha(cssVar("--accent"), 0.42)
-  : st === "considering" ? alpha(cssVar("--accent2"), 0.34)
+  : st === "likely" ? "#24508f"
+  : st === "considering" ? "#5d6b7f"
   : (document.documentElement.dataset.theme === "light" ? "#dbe3ee" : "#20304a");
 
 const px = lon => (lon + 180) / 360 * MW;
@@ -611,13 +618,33 @@ function drawMap() {
     const v = C[iso];
     const st = v ? statusOf(v) : "none";
     const dim = FILTER === "all" ? false : FILTER === "signed" ? st !== "national" : FILTER === "eu" ? st !== "eu" : st !== "none";
-    parts.push(`<path class="cty${dim ? " dim" : ""}" data-iso="${iso}" d="${geoPath(f.geometry)}"
-      fill="${statusColor(st)}" stroke="rgba(255,255,255,.13)" stroke-width=".5"></path>`);
+    const fill = st === "none" ? "url(#landFill)" : statusColor(st);
+    parts.push(`<path class="cty${dim ? " dim" : ""}${st !== "none" ? " lit" : ""}" data-iso="${iso}" d="${geoPath(f.geometry)}"
+      fill="${fill}" stroke="#0a1220" stroke-width=".55" stroke-linejoin="round"></path>`);
   }
   const dots = ROWS.filter(v => v.dot && v.pledge === "signed" && (FILTER === "all" || FILTER === "signed"))
-    .map(v => `<circle class="dot" data-iso="${v.iso}" cx="${px(v.dot[0]).toFixed(1)}" cy="${py(v.dot[1]).toFixed(1)}" r="2.6" fill="${cssVar("--accent")}" stroke="rgba(0,0,0,.5)" stroke-width=".8"></circle>`).join("");
+    .map(v => `<circle class="dot" data-iso="${v.iso}" cx="${px(v.dot[0]).toFixed(1)}" cy="${py(v.dot[1]).toFixed(1)}" r="2.8" fill="${cssVar("--accent")}" stroke="#0a1220" stroke-width=".9"></circle>`).join("");
+  const grat = [];
+  for (let lon = -180; lon <= 180; lon += 30) grat.push(`<line x1="${px(lon).toFixed(1)}" y1="0" x2="${px(lon).toFixed(1)}" y2="${MH}"/>`);
+  for (let lat = -60; lat <= 80; lat += 30) grat.push(`<line x1="0" y1="${py(lat).toFixed(1)}" x2="${MW}" y2="${py(lat).toFixed(1)}"/>`);
   host.innerHTML = `<svg viewBox="0 0 ${MW} ${MH}" preserveAspectRatio="xMidYMid meet" role="img"
-      aria-label="World map coloured by pledge status">${parts.join("")}${dots}</svg>`;
+      aria-label="World map coloured by pledge status">
+    <defs>
+      <radialGradient id="seaGlow" cx="52%" cy="44%" r="64%">
+        <stop offset="0%" stop-color="#17273e"/><stop offset="52%" stop-color="#0f1c2e"/><stop offset="100%" stop-color="#0a1220"/>
+      </radialGradient>
+      <linearGradient id="landFill" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#2a3d59"/><stop offset="100%" stop-color="#1d2b41"/>
+      </linearGradient>
+      <radialGradient id="vig" cx="50%" cy="48%" r="58%">
+        <stop offset="62%" stop-color="rgba(0,0,0,0)"/><stop offset="100%" stop-color="rgba(0,0,0,.55)"/>
+      </radialGradient>
+    </defs>
+    <rect width="${MW}" height="${MH}" fill="url(#seaGlow)"/>
+    <g stroke="#4a6591" stroke-opacity=".14" stroke-width=".6">${grat.join("")}</g>
+    <g>${parts.join("")}${dots}</g>
+    <rect width="${MW}" height="${MH}" fill="url(#vig)" pointer-events="none"/>
+  </svg>`;
   host.querySelectorAll(".cty,.dot").forEach(el => {
     el.addEventListener("mousemove", ev => showTip(ev, el.dataset.iso));
     el.addEventListener("mouseleave", hideTip);
@@ -648,10 +675,10 @@ function applyFilter(f) {
 
 function updateLegend() {
   $("#legend").innerHTML = `<div class="lg-t">Pledge status</div>
-    <div class="lg-k"><i style="background:${cssVar("--accent")}"></i>signed nationally</div>
-    <div class="lg-k"><i style="background:${cssVar("--accent2")}"></i>covered by the EU endorsement</div>
-    <div class="lg-k"><i style="background:${statusColor("likely")}"></i>likely</div>
-    <div class="lg-k"><i style="background:${statusColor("considering")}"></i>considering</div>
+    <div class="lg-k"><i style="background:${cssVar("--accent")}"></i>signed nationally <b>${AGG.signatories}</b></div>
+    <div class="lg-k"><i style="background:${cssVar("--accent2")}"></i>EU endorsement <b>${AGG.eu_covered}</b></div>
+    <div class="lg-k"><i style="background:${statusColor("likely")}"></i>likely <b>${AGG.likely}</b></div>
+    <div class="lg-k"><i style="background:${statusColor("considering")}"></i>considering <b>${AGG.considering}</b></div>
     <div class="lg-k"><i style="background:${statusColor("none")}"></i>not a signatory</div>`;
 }
 
