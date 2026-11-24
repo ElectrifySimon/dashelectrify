@@ -388,8 +388,12 @@ tbody td{font-variant-numeric:tabular-nums}
 
 /* ---- country tab ---- */
 #plans table{white-space:nowrap}
-#plans td:nth-child(2){white-space:normal;min-width:320px;max-width:540px}
-#plans td:nth-child(6){white-space:normal;max-width:200px}
+#plans td:nth-child(3){white-space:normal;min-width:300px;max-width:520px}
+#plans td:nth-child(7){white-space:normal;max-width:200px}
+#plans td.pledge{font-weight:600}
+#plans td.pledge.yes{color:var(--accent)}
+#plans td.pledge.maybe{color:var(--accent2)}
+#plans td.pledge.no{color:var(--muted)}
 #plans th, #plans td{padding-left:14px;padding-right:14px}
 #country.charts{grid-template-columns:1fr}
 .ctrybar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:0 0 16px}
@@ -458,7 +462,7 @@ tbody td{font-variant-numeric:tabular-nums}
     <button class="tab" id="tab-renew" role="tab" aria-selected="false" aria-controls="renew">Renewables</button>
     <button class="tab" id="tab-weto" role="tab" aria-selected="false" aria-controls="weto">WETO pathways</button>
     <button class="tab" id="tab-table" role="tab" aria-selected="false" aria-controls="tblwrap">Table</button>
-    <button class="tab" id="tab-plans" role="tab" aria-selected="false" aria-controls="plans">Plans</button>
+    <button class="tab" id="tab-plans" role="tab" aria-selected="false" aria-controls="plans">National Plans</button>
   </nav>
 
 
@@ -957,7 +961,7 @@ function showTab(id) {
 
 /* ------------------------------------------------------------- plans tab */
 const PCOLS = [
-  {k: "country", t: "Country"}, {k: "document", t: "Plan"}, {k: "category", t: "Category"},
+  {k: "country_display", t: "Country"}, {k: "pledge", t: "Pledge"}, {k: "document", t: "Plan"}, {k: "category", t: "Category"},
   {k: "status", t: "Status"}, {k: "date", t: "Date"}, {k: "publisher", t: "Publisher"},
   {k: "source_url", t: "Source"},
 ];
@@ -981,8 +985,11 @@ function buildPlans() {
   head.innerHTML = "<tr>" + PCOLS.map(c =>
     `<th data-k="${c.k}" class="${PSORT.k === c.k ? "on" : ""}">${c.t}</th>`).join("") + "</tr>";
   const rows = planRows();
+  const pl = p => p.pledge === "signed" ? (p.pledge_source === "eu" ? "EU endorsement" : "Signed")
+    : p.pledge === "likely" ? "Likely" : p.pledge === "considering" ? "Considering" : (p.iso ? "Not a signatory" : "EU bloc");
   body.innerHTML = rows.map(p => `<tr>
-    <td>${p.country || ""}</td>
+    <td>${p.country_display || p.country || ""}</td>
+    <td class="pledge ${p.pledge === "signed" ? "yes" : (p.pledge === "likely" || p.pledge === "considering") ? "maybe" : "no"}">${pl(p)}</td>
     <td>${p.document || p.category || ""}</td>
     <td>${p.category || ""}</td>
     <td>${p.status || ""}</td>

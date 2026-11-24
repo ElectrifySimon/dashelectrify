@@ -444,6 +444,25 @@ def main():
         if iso in grid:
             countries[iso].update(grid[iso])
             grid_hit += 1
+    plan_idx = name_index()
+    plan_idx.update({norm(v): k for k, v in WB_NAMES.items()})
+    PLAN_ALIASES = {norm(k): v for k, v in {
+        "Korea, Republic of": "KOR", "Republic of Korea": "KOR", "South Korea": "KOR",
+        "Turkiye": "TUR", "Türkiye": "TUR", "Cote d'Ivoire": "CIV",
+        "Russian Federation": "RUS", "Iran (Islamic Republic of)": "IRN", "Viet Nam": "VNM",
+        "United States of America": "USA", "United Republic of Tanzania": "TZA",
+        "Netherlands (Kingdom of the)": "NLD", "Democratic Republic of the Congo": "COD",
+    }.items()}
+    for e in plans:
+        iso2 = plan_idx.get(norm(e.get("country") or "")) or PLAN_ALIASES.get(norm(e.get("country") or ""))
+        if iso2 and iso2 in countries:
+            e["iso"] = iso2
+            e["country_display"] = countries[iso2].get("name")
+            e["pledge"] = countries[iso2].get("pledge")
+            e["pledge_source"] = countries[iso2].get("pledge_source")
+        else:
+            e["country_display"] = e.get("country")
+            e["pledge"] = None
     by_name = {}
     for e in plans:
         by_name.setdefault((e.get("country") or "").strip().lower(), []).append(e)
