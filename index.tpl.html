@@ -162,7 +162,7 @@ input[type=search]:focus,select:focus{border-color:var(--accent)}
   box-shadow:var(--e1);color:var(--ink);border-radius:10px;padding:0 14px;min-height:44px;
   font-size:13px;cursor:pointer;font-family:inherit}
 .themebtn:hover{color:var(--accent)}
-.disclaimer{margin:14px 0 18px;max-width:96ch;color:var(--muted);font-size:11.5px;line-height:1.55}
+.disclaimer{margin:14px 0 18px;max-width:96ch;color:color-mix(in srgb,var(--ink) 58%,var(--muted));font-size:12px;line-height:1.55}
 
 /* table */
 .tblwrap{background:var(--surface);border:0;border-radius:12px;overflow:auto;
@@ -355,7 +355,13 @@ tbody td{font-variant-numeric:tabular-nums}
 .lg-t{color:color-mix(in srgb,var(--ink) 82%,transparent)}
 
 #c-map{height:clamp(420px,62vh,700px);padding:10px 0;border:1px solid color-mix(in srgb,var(--line) 55%,transparent);border-radius:16px;overflow:hidden;background:var(--surface);box-shadow:var(--e2)}
-#bgfx{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.9}
+#bgfx{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.9;
+  -webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,.96) 0%,rgba(0,0,0,.72) 46%,rgba(0,0,0,0) 88%);
+  mask-image:linear-gradient(to bottom,rgba(0,0,0,.96) 0%,rgba(0,0,0,.72) 46%,rgba(0,0,0,0) 88%)}
+#glow{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(820px 460px at 16% -10%,rgba(74,140,255,.20),transparent 72%),
+             radial-gradient(620px 380px at 88% 4%,rgba(142,197,255,.10),transparent 76%)}
+:root[data-theme="light"] #glow{background:radial-gradient(760px 420px at 16% -10%,rgba(47,111,224,.14),transparent 72%)}
 #grain{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.045;mix-blend-mode:overlay;
   background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='160' height='160' filter='url(%23n)' opacity='0.55'/></svg>");
   background-size:160px 160px}
@@ -397,7 +403,7 @@ tbody td{font-variant-numeric:tabular-nums}
 .mapwrap .legend{left:16px;right:auto;bottom:16px;background:rgba(10,14,22,.92);border:1px solid rgba(255,255,255,.12);
   border-radius:12px;padding:10px 12px;backdrop-filter:blur(8px)}
 :root[data-theme="light"] .mapwrap .legend{background:rgba(255,255,255,.95);border-color:rgba(12,24,40,.12)}
-.mapwrap .mapnote{right:16px;left:auto;bottom:16px;max-width:320px;text-align:right;font-size:11.5px;opacity:.75}
+.mapwrap .mapnote{right:16px;left:auto;bottom:16px;max-width:320px;text-align:right;font-size:11.5px;opacity:.9}
 .lg-k{display:flex;align-items:center;gap:7px;margin-top:5px;font-size:12px;color:var(--ink)}
 .lg-k i{width:11px;height:11px;border-radius:3px;display:inline-block}
 .lg-t{font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
@@ -452,6 +458,7 @@ tbody td{font-variant-numeric:tabular-nums}
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><symbol id="i-table-2" viewBox="0 0 24 24"><path d="M3 9h18" /> <path d="M9 3v18" /> <rect x="3" y="3" width="18" height="18" rx="2" /></symbol><symbol id="i-activity" viewBox="0 0 24 24"><path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2" /></symbol><symbol id="i-network" viewBox="0 0 24 24"><rect x="16" y="16" width="6" height="6" rx="1" /> <rect x="2" y="16" width="6" height="6" rx="1" /> <rect x="9" y="2" width="6" height="6" rx="1" /> <path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3" /> <path d="M12 12V8" /></symbol><symbol id="i-calendar-check" viewBox="0 0 24 24"><path d="M8 2v3" /> <path d="M16 2v3" /> <rect x="3" y="3" width="18" height="18" rx="2" /> <path d="M3 9h18" /> <path d="m9 15 2 2 4-4" /></symbol><symbol id="i-chart-column" viewBox="0 0 24 24"><path d="M3 3v16a2 2 0 0 0 2 2h16" /> <path d="M18 17V9" /> <path d="M13 17V5" /> <path d="M8 17v-3" /></symbol><symbol id="i-cpu" viewBox="0 0 24 24"><path d="M12 20v2" /> <path d="M12 2v2" /> <path d="M17 20v2" /> <path d="M17 2v2" /> <path d="M2 12h2" /> <path d="M2 17h2" /> <path d="M2 7h2" /> <path d="M20 12h2" /> <path d="M20 17h2" /> <path d="M20 7h2" /> <path d="M7 20v2" /> <path d="M7 2v2" /> <rect x="4" y="4" width="16" height="16" rx="2" /> <rect x="8" y="8" width="8" height="8" rx="1" /></symbol><symbol id="i-globe-2" viewBox="0 0 24 24"><path d="M21.54 15H17a2 2 0 0 0-2 2v4.54" /> <path d="M7 3.34V5a3 3 0 0 0 3 3a2 2 0 0 1 2 2c0 1.1.9 2 2 2a2 2 0 0 0 2-2c0-1.1.9-2 2-2h3.17" /> <path d="M11 21.95V18a2 2 0 0 0-2-2a2 2 0 0 1-2-2v-1a2 2 0 0 0-2-2H2.05" /> <circle cx="12" cy="12" r="10" /></symbol><symbol id="i-plug-zap" viewBox="0 0 24 24"><path d="M6.3 20.3a2.4 2.4 0 0 0 3.4 0L12 18l-6-6-2.3 2.3a2.4 2.4 0 0 0 0 3.4Z" /> <path d="m2 22 3-3" /> <path d="M7.5 13.5 10 11" /> <path d="M10.5 16.5 13 14" /> <path d="m18 3-4 4h6l-4 4" /></symbol><symbol id="i-gauge" viewBox="0 0 24 24"><path d="m12 14 4-4" /> <path d="M3.34 19a10 10 0 1 1 17.32 0" /></symbol><symbol id="i-trending-down" viewBox="0 0 24 24"><path d="M16 17h6v-6" /> <path d="m22 17-8.5-8.5-5 5L2 7" /></symbol><symbol id="i-triangle-alert" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3" /> <path d="M12 9v4" /> <path d="M12 17h.01" /></symbol><symbol id="i-download" viewBox="0 0 24 24"><path d="M12 15V3" /> <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /> <path d="m7 10 5 5 5-5" /></symbol><symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" /> <path d="M12 2v2" /> <path d="M12 20v2" /> <path d="m4.93 4.93 1.41 1.41" /> <path d="m17.66 17.66 1.41 1.41" /> <path d="M2 12h2" /> <path d="M20 12h2" /> <path d="m6.34 17.66-1.41 1.41" /> <path d="m19.07 4.93-1.41 1.41" /></symbol><symbol id="i-moon" viewBox="0 0 24 24"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401" /></symbol><symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18" /> <path d="m6 6 12 12" /></symbol><symbol id="i-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34" /> <circle cx="11" cy="11" r="8" /></symbol><symbol id="i-layers" viewBox="0 0 24 24"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z" /> <path d="M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12" /> <path d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17" /></symbol><symbol id="i-external-link" viewBox="0 0 24 24"><path d="M15 3h6v6" /> <path d="M10 14 21 3" /> <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /></symbol><symbol id="i-map-pin" viewBox="0 0 24 24"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0" /> <circle cx="12" cy="10" r="3" /></symbol><symbol id="i-arrow-up-right" viewBox="0 0 24 24"><path d="M7 7h10v10" /> <path d="M7 17 17 7" /></symbol></svg>
+<div id="glow" aria-hidden="true"></div>
 <canvas id="bgfx" aria-hidden="true"></canvas>
 <div id="grain" aria-hidden="true"></div>
 
@@ -1028,6 +1035,71 @@ function buildTable() {
   });
 }
 
+/* ------------------------------------------------------- contour background */
+function contourField() {
+  const cv = document.getElementById("bgfx");
+  if (!cv) return;
+  const ctx = cv.getContext("2d");
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let W = 0, H = 0, t = 0, last = 0, raf = null, on = true, rgb = [74, 140, 255], tick = 0;
+  const N = 40;
+  function hexToRgb(hex) {
+    const h = hex.trim().replace("#", "");
+    if (h.length < 6) return [74, 140, 255];
+    return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)];
+  }
+  function accent() {
+    const v = getComputedStyle(document.documentElement).getPropertyValue("--accent");
+    rgb = hexToRgb(v || "#4a8cff");
+  }
+  function size() {
+    W = cv.clientWidth; H = cv.clientHeight;
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  function draw() {
+    if (!W || !H) return;
+    ctx.clearRect(0, 0, W, H);
+    const step = Math.max(2, W / 190), [r, g, b] = rgb;
+    for (let i = 0; i < N; i++) {
+      const base = (i + 0.5) / N * H;
+      const amp = 16 + 30 * Math.abs(Math.sin(i * 0.63 + 1.1));
+      const alpha = 0.042 + 0.068 * (0.5 + 0.5 * Math.sin(i * 0.87 + 0.4));
+      ctx.beginPath();
+      for (let x = 0; x <= W; x += step) {
+        const u = x / W;
+        const y = base
+          + Math.sin(u * 4.2 + t * 0.52 + i * 0.31) * amp * 0.52
+          + Math.sin(u * 9.4 - t * 0.34 + i * 0.17) * amp * 0.29
+          + Math.sin(u * 1.7 + t * 0.21 + i * 0.06) * amp * 0.19;
+        if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+      ctx.strokeStyle = `rgba(${r},${g},${b},${alpha.toFixed(3)})`;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+  }
+  function loop(ts) {
+    if (!on) return;
+    if (ts - last > 33) {
+      t = ts / 1000;
+      if (tick++ % 30 === 0) accent();
+      draw();
+      last = ts;
+    }
+    raf = requestAnimationFrame(loop);
+  }
+  size(); accent(); draw();
+  if (!reduced) raf = requestAnimationFrame(loop);
+  window.addEventListener("resize", () => { size(); accent(); draw(); });
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) { on = false; cancelAnimationFrame(raf); }
+    else if (!reduced) { on = true; last = 0; raf = requestAnimationFrame(loop); }
+  });
+  window.__contour = { redraw: () => { accent(); draw(); } };
+}
+
 /* ------------------------------------------------------------------- tabs */
 const PANELS = ["country", "econ", "access", "renew", "weto", "tblwrap", "plans"];
 function showTab(id) {
@@ -1230,10 +1302,12 @@ function start() {
     if (b) b.setAttribute("aria-label", dark ? "Switch to light theme" : "Switch to dark theme");
   }
   syncThemeButton();
+  contourField();
   document.getElementById("theme").addEventListener("click", () => {
     const el = document.documentElement;
     el.dataset.theme = el.dataset.theme === "light" ? "dark" : "light";
     syncThemeButton();
+    if (window.__contour) window.__contour.redraw();
     setTimeout(() => {
       drawMap(); updateLegend();
       const cur = PANELS.find(p => !document.getElementById(p).hidden);
