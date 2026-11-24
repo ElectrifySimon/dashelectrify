@@ -385,6 +385,32 @@ tbody td{font-variant-numeric:tabular-nums}
 .mapwrap .legend .lg-k i{width:11px;height:11px;border-radius:3px}
 .mapwrap .legend .lg-k{font-size:12px;color:var(--ink);margin-top:6px}
 .mapwrap .legend .lg-t{color:var(--muted);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}
+
+/* ---- country tab ---- */
+#country.charts{grid-template-columns:1fr}
+.ctrybar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:0 0 16px}
+.ctrybar label{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.ctrybar select{background:var(--surface2);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:8px 12px;font-size:14px;min-width:240px}
+.ctrybar .badge{font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:4px 9px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+.ctrybar .badge.signed{color:var(--accent);border-color:var(--accent)}
+.ctrybar .badge.eu{color:var(--accent2);border-color:var(--accent2)}
+.ctrybar .sub{font-size:12px;color:var(--muted)}
+.kv{display:flex;flex-direction:column;gap:2px}
+.kvrow{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:7px 0;border-bottom:1px solid var(--line)}
+.kvrow:last-child{border-bottom:0}
+.kvrow span{font-size:12.5px;color:var(--muted)}
+.kvrow b{font-size:14px;font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums}
+.kvrow b.good{color:var(--accent)}
+.kvrow b.warn{color:var(--accent2)}
+.card.wide{grid-column:1 / -1}
+.plan{padding:10px 0;border-bottom:1px solid var(--line)}
+.plan:last-child{border-bottom:0}
+.plan .ptitle{font-size:13.5px;color:var(--ink)}
+.plan .pmeta{font-size:11.5px;color:var(--muted);margin-top:3px}
+.plan a{color:var(--accent);text-decoration:none}
+.plan a:hover{text-decoration:underline}
+.planlist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 28px}
+@media(max-width:980px){.planlist{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -422,6 +448,7 @@ tbody td{font-variant-numeric:tabular-nums}
   </section>
 
   <nav class="tabs" role="tablist" aria-label="Views">
+    <button class="tab" id="tab-country" role="tab" aria-selected="false" aria-controls="country">Country</button>
     <button class="tab on" id="tab-econ" role="tab" aria-selected="true" aria-controls="econ">Economics</button>
     <button class="tab" id="tab-access" role="tab" aria-selected="false" aria-controls="access">Electricity access</button>
     <button class="tab" id="tab-renew" role="tab" aria-selected="false" aria-controls="renew">Renewables</button>
@@ -429,6 +456,23 @@ tbody td{font-variant-numeric:tabular-nums}
     <button class="tab" id="tab-table" role="tab" aria-selected="false" aria-controls="tblwrap">Table</button>
   </nav>
 
+
+  <section id="country" class="charts" role="tabpanel" aria-labelledby="tab-country" tabindex="0" hidden>
+    <div class="ctrybar">
+      <label for="ctrysel">Country</label>
+      <select id="ctrysel"></select>
+      <span class="badge" id="ctrybadge"></span>
+      <span class="sub" id="ctrymeta"></span>
+    </div>
+    <div class="chartgrid">
+      <div class="card wide"><h3 id="mixtitle">Electricity mix</h3><p class="note">Share of electricity generated from fossil fuels, renewables and nuclear. Source: Ember (2026), processed by Our World in Data.</p><div class="cv" id="c-mix"></div></div>
+      <div class="card"><h3>Electrify</h3><div class="kv" id="k-electrify"></div></div>
+      <div class="card"><h3>Renewables</h3><div class="kv" id="k-renew"></div></div>
+      <div class="card"><h3>Grids</h3><div class="kv" id="k-grid"></div></div>
+      <div class="card"><h3>National plans</h3><div id="k-plans"></div></div>
+      <div class="card wide"><h3>National electrification plans register</h3><p class="note">Every plan, roadmap and strategy tracked, with the publisher and the source document.</p><div id="k-register" class="planlist"></div></div>
+    </div>
+  </section>
   <section id="econ" class="charts" role="tabpanel" aria-labelledby="tab-econ" tabindex="0">
     <div class="chartgrid">
       <div class="card"><h3>Income and access move together</h3><p class="note">GDP per capita, log scale, against the share of people with electricity. Bubble area is population. Signatories in blue.</p><div class="cv" id="c-scatter"></div></div>
@@ -879,10 +923,11 @@ function buildTable() {
 }
 
 /* ------------------------------------------------------------------- tabs */
-const PANELS = ["econ", "access", "renew", "weto", "tblwrap"];
+const PANELS = ["country", "econ", "access", "renew", "weto", "tblwrap"];
 function showTab(id) {
   PANELS.forEach(p => { const el = document.getElementById(p); if (el) el.hidden = p !== id; });
   document.querySelectorAll(".tab").forEach(b => { const on = b.getAttribute("aria-controls") === id; b.classList.toggle("on", on); b.setAttribute("aria-selected", on); });
+  if (id === "country") drawCountry(CUR || "DEU");
   if (id === "econ") drawEcon();
   if (id === "access") drawAccess();
   if (id === "renew") drawRenew();
@@ -890,6 +935,120 @@ function showTab(id) {
   if (id === "tblwrap") buildTable();
   setTimeout(resizeAll, 60);
 }
+
+
+/* ------------------------------------------------------------ country tab */
+const MIX = DATA.mix_series || {};
+let CUR = null;
+
+const pledgeLabel = v => v.pledge === "signed" ? (v.pledge_source === "eu" ? "EU endorsement" : "Signed")
+  : v.pledge === "likely" ? "Likely" : v.pledge === "considering" ? "Considering" : "Not a signatory";
+
+function kvSet(el, rows) {
+  if (!el) return;
+  el.innerHTML = rows.map(r => `<div class="kvrow"><span>${r[0]}</span><b class="${r[2] || ""}">${r[1]}</b></div>`).join("");
+}
+
+function drawCountry(iso) {
+  const v = C[iso];
+  if (!v) return;
+  CUR = iso;
+  const sel = $("#ctrysel");
+  if (sel && sel.value !== iso) sel.value = iso;
+
+  const badge = $("#ctrybadge");
+  badge.textContent = pledgeLabel(v);
+  badge.className = "badge" + (v.pledge === "signed" ? (v.pledge_source === "eu" ? " eu" : " signed") : "");
+
+  const bits = [];
+  if (v.region) bits.push(v.region);
+  if (v.pop != null) bits.push(fmtMil(v.pop) + " people");
+  if (v.gdp != null) bits.push("$" + fmtMil(v.gdp) + " GDP");
+  if (v.gdp_pc != null) bits.push("$" + Math.round(v.gdp_pc).toLocaleString("en-US") + " per head");
+  $("#ctrymeta").textContent = bits.join(" · ");
+
+  const unserved = (v.pop != null && v.access != null) ? v.pop * (1 - v.access / 100) : null;
+  kvSet($("#k-electrify"), [
+    ["Access to electricity", fmtPct(v.access)],
+    ["Rural access", fmtPct(v.access_rural), v.access_rural != null && v.access_rural < 60 ? "warn" : ""],
+    ["People without electricity", fmtMil(unserved)],
+    ["Electricity use per person", v.elec_pc == null ? "-" : fmtInt(v.elec_pc) + " kWh"],
+  ]);
+
+  const mix = v.mix || {};
+  kvSet($("#k-renew"), [
+    ["Renewable share of electricity", fmtPct(mix.renew != null ? mix.renew : v.renew_elec), "good"],
+    ["Fossil share of electricity", fmtPct(mix.fossil), mix.fossil != null && mix.fossil > 50 ? "warn" : ""],
+    ["Nuclear share", fmtPct(mix.nuclear)],
+    ["Renewables in final energy", fmtPct(v.renew_fec)],
+    ["2030 capacity target", v.res_target_gw == null ? "-" : (v.res_target_gw >= 100 ? Math.round(v.res_target_gw) : v.res_target_gw.toFixed(1)) + " GW"],
+    ["2030 share target", v.res_target_share == null ? "-" : Math.round(v.res_target_share) + "%"],
+  ]);
+
+  kvSet($("#k-grid"), [
+    ["Transmission and distribution losses", fmtPct(v.losses), v.losses != null && v.losses > 15 ? "warn" : ""],
+    ["Network length, modelled", v.net_km == null ? "-" : fmtInt(v.net_km) + " km"],
+    ["Network per 1,000 people", v.km_per_1000_people == null ? "-" : Math.round(v.km_per_1000_people).toLocaleString("en-US") + " m"],
+    ["Network per 1,000 km²", v.km_per_1000km2 == null ? "-" : Math.round(v.km_per_1000km2) + " km"],
+  ]);
+
+  let plans = (v.plans || []).slice();
+  if (!plans.length && v.pledge_source === "eu") {
+    const eu = (DATA.plans || []).filter(p => (p.country || "").toLowerCase() === "european union");
+    plans = eu.map(p => Object.assign({}, p, {regional: true}));
+  }
+  $("#k-plans").innerHTML = plans.length ? plans.map(p => `
+    <div class="plan">
+      <div class="ptitle">${p.document || p.category || "Plan"}</div>
+      <div class="pmeta">${[p.regional ? "Regional (EU)" : null, p.category, p.status, p.date, p.publisher].filter(Boolean).join(" · ")}</div>
+      ${p.source_url ? `<div class="pmeta"><a href="${p.source_url}" target="_blank" rel="noopener">Source document</a></div>` : ""}
+    </div>`).join("")
+    : `<div class="pmeta">No entry in the national plans register for this country.</div>`;
+
+  $("#mixtitle").textContent = (v.name || iso) + " electricity mix";
+
+  const s = MIX[iso];
+  const q = baseOpt();
+  q.grid = {left: 44, right: 18, top: 16, bottom: 42, containLabel: false};
+  q.legend = {show: true, bottom: 4, icon: "roundRect", itemWidth: 10, itemHeight: 3,
+              textStyle: {color: cssVar("--muted"), fontSize: 11}};
+  q.tooltip.trigger = "axis";
+  q.tooltip.valueFormatter = x => (x == null ? "-" : x.toFixed(1) + "%");
+  q.xAxis = Object.assign(q.xAxis, {type: "category", data: s ? s.years : [],
+    axisLabel: {color: cssVar("--muted"), fontSize: 10}});
+  q.yAxis = Object.assign(q.yAxis, {type: "value", max: 100, min: 0,
+    axisLabel: {color: cssVar("--muted"), fontSize: 10, formatter: "{value}%"}});
+  const line = (name, data, colour) => ({name, type: "line", data, smooth: 0.25, symbol: "none",
+    lineStyle: {width: 2, color: colour}, itemStyle: {color: colour}});
+  q.series = s ? [
+    line("Fossil", s.fossil, cssVar("--bad")),
+    line("Renewables", s.renew, cssVar("--accent")),
+    line("Nuclear", s.nuclear, cssVar("--accent2")),
+  ] : [];
+  chart("c-mix", q);
+}
+
+(function initCountryPicker() {
+  const sel = $("#ctrysel");
+  if (!sel) return;
+  const list = ROWS.filter(v => v.name).sort((a, b) => a.name.localeCompare(b.name));
+  sel.innerHTML = list.map(v => `<option value="${v.iso}">${v.name}</option>`).join("");
+  CUR = C.DEU ? "DEU" : (list[0] && list[0].iso);
+  sel.value = CUR;
+  sel.onchange = () => drawCountry(sel.value);
+
+  const reg = $("#k-register");
+  if (reg) {
+    const rows = (DATA.plans || []).slice().sort((a, b) =>
+      (a.country || "").localeCompare(b.country || ""));
+    reg.innerHTML = rows.map(p => `
+      <div class="plan">
+        <div class="ptitle">${p.country || ""} - ${p.document || p.category || "Plan"}</div>
+        <div class="pmeta">${[p.category, p.status, p.date, p.publisher].filter(Boolean).join(" · ")}
+        ${p.source_url ? ` · <a href="${p.source_url}" target="_blank" rel="noopener">source</a>` : ""}</div>
+      </div>`).join("");
+  }
+})();
 
 /* ----------------------------------------------------------------- footer */
 function buildFoot() {

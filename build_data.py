@@ -297,6 +297,65 @@ def ember_targets():
     return out
 
 
+
+# ------------------------------------------------- country tab extra layers
+def owid_mix(path):
+    """Per-country yearly electricity mix shares (Ember via Our World in Data)."""
+    import csv as _csv
+    if not os.path.exists(path):
+        return {}
+    rows = list(_csv.DictReader(open(path, newline="", encoding="utf-8")))
+    cols = [c for c in rows[0].keys() if c not in ("entity", "code", "year")]
+    out = {}
+    for r in rows:
+        iso = (r.get("code") or "").strip()
+        if len(iso) != 3:
+            continue
+        try:
+            y = int(r["year"])
+        except (TypeError, ValueError):
+            continue
+        rec = out.setdefault(iso, {"years": [], "fossil": [], "renew": [], "nuclear": []})
+        rec["years"].append(y)
+        for key, col in zip(("fossil", "renew", "nuclear"),
+                            ("fossil_share_of_electricity__pct",
+                             "renewable_share_of_electricity__pct",
+                             "nuclear_share_of_electricity__pct")):
+            try:
+                rec[key].append(round(float(r.get(col)), 2))
+            except (TypeError, ValueError):
+                rec[key].append(None)
+    for iso, rec in out.items():
+        order = sorted(range(len(rec["years"])), key=lambda i: rec["years"][i])
+        for k in ("years", "fossil", "renew", "nuclear"):
+            rec[k] = [rec[k][i] for i in order]
+    return out
+
+
+def dashdist_grid(path):
+    """Grid loss share and network density from the DashDist build."""
+    if not os.path.exists(path):
+        return {}
+    d = json.load(open(path))
+    out = {}
+    for r in d.get("rows", []):
+        iso = (r.get("iso") or "").upper()
+        if len(iso) != 3:
+            continue
+        out[iso] = {"losses": r.get("losses"), "kwh_pc": r.get("kwh_pc"),
+                    "net_km": r.get("net_km"), "km_per_1000_people": r.get("km_per_1000_people"),
+                    "km_per_1000km2": r.get("km_per_1000km2"),
+                    "year_losses": r.get("year_losses")}
+    return out
+
+
+def plans_register(path):
+    if not os.path.exists(path):
+        return []
+    d = json.load(open(path))
+    return d.get("entries", [])
+
+
 def main():
     sheet = parse_pledge()
 
@@ -372,6 +431,28 @@ def main():
     for iso in countries:
         countries[iso]["name"] = names.get(iso) or WB_SHORT.get(WB_NAMES.get(iso, ""), WB_NAMES.get(iso)) or iso
 
+    mix = owid_mix(os.path.join(RAW, "owid_elec_mix.csv"))
+    grid = dashdist_grid("/home/simon/projects/dashdist/data/dashboard.json")
+    plans = plans_register("/home/simon/projects/electrification-tracker/src/data.json")
+    mix_hit = grid_hit = 0
+    for iso in list(countries):
+        if iso in mix:
+            m = mix[iso]
+            countries[iso]["mix"] = {"year": m["years"][-1], "fossil": m["fossil"][-1],
+                                     "renew": m["renew"][-1], "nuclear": m["nuclear"][-1]}
+            mix_hit += 1
+        if iso in grid:
+            countries[iso].update(grid[iso])
+            grid_hit += 1
+    by_name = {}
+    for e in plans:
+        by_name.setdefault((e.get("country") or "").strip().lower(), []).append(e)
+    for iso, v in countries.items():
+        hit = by_name.get((v.get("name") or "").strip().lower())
+        if hit:
+            v["plans"] = hit
+    print(f"mix {mix_hit} countries, grid {grid_hit} countries, plans {len(plans)} entries")
+
     signed_isos = [i for i, v in countries.items() if v["pledge"] == "signed"]
     agg = {
         "signatories": sum(1 for i, v in countries.items()
@@ -411,7 +492,8 @@ def main():
             "COP31 Presidency pledge registry, status as of 2026-11-23",
             "World Bank World Development Indicators, API, last updated 2026-11-11",
         ],
-    }, "agg": agg, "countries": countries, "access_series": access_series}
+    }, "agg": agg, "countries": countries, "access_series": access_series,
+       "mix_series": {iso: mix[iso] for iso in mix if iso in countries}, "plans": plans}
     json.dump(out, open(os.path.join(ROOT, "data", "dashboard.json"), "w"), separators=(",", ":"))
     print("aggregates:", json.dumps(agg, indent=1)[:400])
     print("countries:", len(countries), "signed:", len(signed_isos))
