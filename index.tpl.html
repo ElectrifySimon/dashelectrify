@@ -485,6 +485,10 @@ tbody td{font-variant-numeric:tabular-nums}
   background:var(--bg)}
 .tabrow .tabs{flex:1 1 auto;min-width:0;overscroll-behavior-x:contain}
 #overview{margin-top:12px}
+.tabsel{display:none;appearance:none;background:var(--surface2);color:var(--ink);border:1px solid var(--line);
+  border-radius:10px;height:40px;padding:0 34px 0 12px;font:600 13px/1 "Instrument Sans",system-ui,sans-serif;
+  background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);
+  background-position:calc(100% - 17px) 17px,calc(100% - 12px) 17px;background-size:5px 5px;background-repeat:no-repeat}
 .tblwrap,.charts,#overview{scroll-margin-top:64px}
 .btn-dl[hidden]{display:none}
 #toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,16px);z-index:80;opacity:0;pointer-events:none;
@@ -501,7 +505,7 @@ tbody td{font-variant-numeric:tabular-nums}
   .tab svg.ic{width:13px;height:13px;margin-right:4px}
   .btn-dl{flex:0 0 auto;width:40px;height:40px;padding:0;justify-content:center;margin:2px 0 0 auto}
   .btn-dl .lbl{display:none}
-  #toast{top:auto;bottom:16px}
+  #toast{bottom:auto;top:72px}
 
   .mapwrap{display:flex;flex-direction:column}
   .mapwrap .mapbar{position:static;order:1;margin:0 0 8px;max-width:none;width:auto}
@@ -527,6 +531,15 @@ tbody td{font-variant-numeric:tabular-nums}
   .ctrybar select{min-width:0;width:100%}
   .charts,.chartgrid{grid-template-columns:1fr}
   .card p,.card .note{white-space:normal;overflow-wrap:anywhere}
+}
+@media(max-width:560px){
+  .tabrow{flex-wrap:nowrap;align-items:center;gap:8px;padding-top:8px}
+  .tabrow .tabs{display:none}
+  .tabsel{display:block;flex:1 1 auto;min-width:0}
+  .btn-dl{margin:0}
+  #plans table{min-width:560px}
+  #plans td,#plans th{white-space:normal;overflow-wrap:anywhere}
+  #plans th:nth-child(2),#plans td:nth-child(2){min-width:220px}
 }
 @media(max-width:400px){
   .kpi .n{font-size:clamp(21px,6.6vw,27px)}
@@ -564,6 +577,15 @@ tbody td{font-variant-numeric:tabular-nums}
     <button class="tab" id="tab-weto" role="tab" aria-selected="false" aria-controls="weto"><svg class="ic" aria-hidden="true"><use href="#i-trending-down"></use></svg>WETO pathways</button>
     <button class="tab" id="tab-plans" role="tab" aria-selected="false" aria-controls="plans"><svg class="ic" aria-hidden="true"><use href="#i-calendar-check"></use></svg>National Plans</button>
   </nav>
+  <select class="tabsel" id="tabsel" aria-label="Choose a view">
+    <option value="tblwrap">Table</option>
+    <option value="country">Country</option>
+    <option value="econ">Economics</option>
+    <option value="access">Electricity access</option>
+    <option value="renew">Renewables</option>
+    <option value="weto">WETO pathways</option>
+    <option value="plans">National Plans</option>
+  </select>
   <button class="btn-dl" id="dl" title="Download the country table as CSV" aria-label="Download the country table as CSV"><svg class="ic" aria-hidden="true"><use href="#i-download"></use></svg><span class="lbl">Download data</span></button>
 </div>
 
@@ -898,6 +920,12 @@ function chart(id, opt) {
       pageIconSize: 10, textStyle: {fontSize: 11, color: cssVar("--muted")}}, opt.legend || {});
     delete opt.legend.top;
     opt.legend.bottom = 0; opt.legend.left = 0; opt.legend.right = 0;
+    const series = Array.isArray(opt.series) ? opt.series.length : 0;
+    opt.legend.type = series > 4 ? "scroll" : "plain";
+    if (innerWidth < 760) {
+      opt.legend.itemGap = 8;
+      opt.legend.textStyle = {fontSize: 10, color: cssVar("--muted")};
+    }
     opt.grid.bottom = Math.max(typeof opt.grid.bottom === "number" ? opt.grid.bottom : 34, 58);
   }
   if (opt && opt.tooltip) opt.tooltip.confine = true;
@@ -1273,11 +1301,12 @@ function showTab(id) {
   PANELS.forEach(p => { const el = document.getElementById(p); if (el) el.hidden = p !== id; });
   const ov = document.getElementById("overview");
   if (ov) ov.hidden = id !== "tblwrap";
+  const sel = document.getElementById("tabsel");
+  if (sel && sel.value !== id) sel.value = id;
   document.querySelectorAll(".tab").forEach(b => { const on = b.getAttribute("aria-controls") === id; b.classList.toggle("on", on); b.setAttribute("aria-selected", on);
     if (on) { const strip = b.closest(".tabs"); if (strip && strip.scrollWidth > strip.clientWidth) strip.scrollTo({left: Math.max(0, b.offsetLeft - 12), behavior: "smooth"}); } });
   if (id === "country") drawCountry(CUR || "DEU");
-  if (id === "econ") drawEcon();
-  if (id === "access") drawAccess();
+  if (id === "econ") drawEcon();  if (id === "access") drawAccess();
   if (id === "renew") drawRenew();
   if (id === "weto") drawWeto();
   if (id === "tblwrap") buildTable();
@@ -1478,6 +1507,8 @@ function start() {
   }
   syncThemeButton();
   contourField();
+  const tabsel = document.getElementById("tabsel");
+  if (tabsel) tabsel.addEventListener("change", e => showTab(e.target.value));
   document.getElementById("theme").addEventListener("click", () => {
     const el = document.documentElement;
     el.dataset.theme = el.dataset.theme === "light" ? "dark" : "light";
@@ -1499,8 +1530,7 @@ function start() {
 
 /* the geo file and weto data arrive as globals from small json islands */
 
-function boot() {
-  if (!window.__GEO__ || !window.__GEO__.features || !window.__GEO__.features.length) {
+function boot() {  if (!window.__GEO__ || !window.__GEO__.features || !window.__GEO__.features.length) {
     document.getElementById("app").innerHTML = "<p style='padding:40px'>Map geometry missing from this build.</p>";
     return;
   }
