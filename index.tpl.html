@@ -482,8 +482,7 @@ tbody td{font-variant-numeric:tabular-nums}
 
 /* ---- phone layout: navigation first, nothing hidden behind an overlay ---- */
 .tabrow{position:sticky;top:0;z-index:40;padding:10px 0 0;margin:0 0 8px;
-  background:color-mix(in srgb,var(--bg) 92%,transparent);
-  -webkit-backdrop-filter:blur(16px) saturate(1.2);backdrop-filter:blur(16px) saturate(1.2)}
+  background:var(--bg)}
 .tabrow .tabs{flex:1 1 auto;min-width:0;overscroll-behavior-x:contain}
 #overview{margin-top:12px}
 .tblwrap,.charts,#overview{scroll-margin-top:64px}
@@ -496,23 +495,22 @@ tbody td{font-variant-numeric:tabular-nums}
 
 @media(max-width:760px){
   body{overflow-x:clip}
-  .tabrow{flex-wrap:nowrap;padding-top:8px}
-  .tabrow .tabs{flex:1 1 auto;min-width:0;overflow-x:auto;scroll-snap-type:x proximity;
-    -webkit-overflow-scrolling:touch;scrollbar-width:none;
-    -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 10px,#000 calc(100% - 14px),transparent 100%);
-    mask-image:linear-gradient(90deg,transparent 0,#000 10px,#000 calc(100% - 14px),transparent 100%)}
-  .tabrow .tabs::-webkit-scrollbar{display:none}
-  .tab{scroll-snap-align:start;font-size:12.5px;padding:0 1px 9px;min-height:40px}
-  .tab svg.ic{width:14px;height:14px;margin-right:5px}
-  .btn-dl{flex:0 0 auto;width:42px;height:42px;padding:0;justify-content:center;margin:0 0 0 6px}
+  .tabrow{flex-wrap:wrap}
+  .tabrow .tabs{flex:1 1 100%;flex-wrap:wrap;gap:0 16px;overflow:visible}
+  .tab{font-size:12px;padding:0 1px 7px;min-height:30px}
+  .tab svg.ic{width:13px;height:13px;margin-right:4px}
+  .btn-dl{flex:0 0 auto;width:40px;height:40px;padding:0;justify-content:center;margin:2px 0 0 auto}
   .btn-dl .lbl{display:none}
+  #toast{top:auto;bottom:16px}
 
   .mapwrap{display:flex;flex-direction:column}
   .mapwrap .mapbar{position:static;order:1;margin:0 0 8px;max-width:none;width:auto}
   #c-map{order:2;aspect-ratio:2/1;height:auto;max-height:min(56vh,340px);padding:6px}
   .mapwrap .legend{position:static;order:3;display:flex;flex-wrap:wrap;align-items:center;gap:6px 16px;
     left:auto;right:auto;top:auto;bottom:auto;min-width:0;width:auto;max-width:none;margin:10px 0 0;
-    padding:0;background:none!important;border:0!important;box-shadow:none}
+    padding:10px 12px;background:var(--surface)!important;border:1px solid var(--line)!important;
+    box-shadow:none;border-radius:12px}
+  .mapwrap .legend .lg-k i{border:1px solid color-mix(in srgb,var(--ink) 24%,transparent)}
   .mapwrap .legend .lg-t{flex:1 1 100%;margin:0 0 2px}
   .mapwrap .legend .lg-k{margin:0}
   .mapwrap .legend .lg-k:first-of-type{padding-top:0;border-top:0}
@@ -521,11 +519,14 @@ tbody td{font-variant-numeric:tabular-nums}
   .tblwrap{position:relative}
   table{min-width:720px}
   #plans table{min-width:940px}
+  /* one scroller at phone width: the frozen column would cover its neighbours */
   thead th{z-index:5}
-  thead th:first-child{z-index:6}
-  tbody td:first-child{z-index:2}
+  tbody td:first-child{position:static!important;background:transparent!important;box-shadow:none!important}
+  tbody tr:hover td:first-child{background:var(--surface2)!important}
   .scrollhint{display:block}
   .ctrybar select{min-width:0;width:100%}
+  .charts,.chartgrid{grid-template-columns:1fr}
+  .card p,.card .note{white-space:normal;overflow-wrap:anywhere}
 }
 @media(max-width:400px){
   .kpi .n{font-size:clamp(21px,6.6vw,27px)}
@@ -893,9 +894,10 @@ function chart(id, opt) {
   if (CHARTS[id]) CHARTS[id].dispose();
   if (opt && opt.grid) {
     /* Cartesian charts: a scrolling legend below the plot, never on top of it. */
-    opt.legend = Object.assign({type: "scroll", bottom: 0, left: 0, right: 0,
-      itemGap: 12, itemWidth: 10, itemHeight: 8, pageIconSize: 10,
-      textStyle: {fontSize: 11, color: cssVar("--muted")}}, opt.legend || {});
+    opt.legend = Object.assign({type: "scroll", itemGap: 12, itemWidth: 10, itemHeight: 8,
+      pageIconSize: 10, textStyle: {fontSize: 11, color: cssVar("--muted")}}, opt.legend || {});
+    delete opt.legend.top;
+    opt.legend.bottom = 0; opt.legend.left = 0; opt.legend.right = 0;
     opt.grid.bottom = Math.max(typeof opt.grid.bottom === "number" ? opt.grid.bottom : 34, 58);
   }
   if (opt && opt.tooltip) opt.tooltip.confine = true;

@@ -29,13 +29,20 @@ import pathlib
 p = pathlib.Path("gated/index.html")
 html = p.read_text()
 css = """<style>
-html,body{background:#070b13!important;color:#eef3fa}
+html,body{background:#070b13!important;color:#eef3fa!important;color-scheme:dark}
 .staticrypt-html,.staticrypt-body{background:#070b13!important}
-body,form,label,p,h1,input,button{font-family:"Instrument Sans",system-ui,sans-serif}
+body,body *{color:#eef3fa}
+form input[type=password],form input[type=text]{background:#0d1522!important;color:#eef3fa!important;
+  border:1px solid #26364b!important;border-radius:10px;min-height:44px}
 form input[type=checkbox]{width:22px;height:22px;accent-color:#4a8cff}
 label{display:flex;align-items:center;gap:10px;min-height:44px;cursor:pointer}
-button[type=submit]{min-height:44px}
-@media(prefers-color-scheme:light){html,body,.staticrypt-html,.staticrypt-body{background:#f2f5fa!important;color:#0a1421}}
+button[type=submit]{min-height:44px;border-radius:10px;font-weight:600}
+@media(prefers-color-scheme:light){
+  html,body{background:#f2f5fa!important;color:#0a1421!important;color-scheme:light}
+  .staticrypt-html,.staticrypt-body{background:#f2f5fa!important}
+  body,body *{color:#0a1421}
+  form input[type=password],form input[type=text]{background:#fff!important;color:#0a1421!important;border-color:#d5deea!important}
+}
 </style>
 """
 if css not in html:
