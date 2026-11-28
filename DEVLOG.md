@@ -5,6 +5,19 @@
 - Masthead rule removed; National Plans table left-aligned; table caption removed; ISO3 fallback names for Cook Islands, Niue, Vatican City.
 - IGO copy pass, merged evaluation state (hatched), EU endorsement as a lighter blue, labelled theme button with a real icon sprite.
 
+## 2026-11-28 - Phone pass, from four agent reports
+
+- Four AI testers ran the live page at 320, 360, 412 and 430 px. First run scored 4, 4, 4, 5 out of 10. Second run after the first fix pass scored 4, 4, 5, 5 and named the remaining defects: hidden tabs, a sliced tab strip, a frozen country column covering its neighbours, map legend text lost on the dark card, chart legends printed over each other, and a gate that ignored the phone theme.
+- Nav moved above the KPI grid and pinned with `position:sticky`, background now opaque so figures cannot ghost through the labels. At 760 px the tab row wraps to two rows and every label stays whole; no horizontal strip, no sliced word.
+- Download button left the tab strip: 40 px icon at the right of the last tab row on phones, labelled on desktop, with a toast on click.
+- Map card is a column: filters, map at 2:1 so it fills the card instead of letterboxing in a 340 px box, legend and note below it on the surface colour. The old legend took the left 210 px of the card because a media query set both `top` and `bottom`.
+- Tables: at phone width the first column is no longer frozen, so it stops covering the data beside it; the header stays sticky and sits above the rows. `min-width` keeps the columns from collapsing, and a line under the table says to swipe.
+- Charts: legends forced to a scrolling row under the plot (`top` deleted, `bottom: 0`), tooltips confined, subtitles allowed to wrap.
+- Numbers: one formatter set. `2.1bn`, `$40.8tn`, `$56,104`; the old code produced `$4685.59bn` and a `1000k` tick.
+- Theme: a stored choice wins, otherwise `prefers-color-scheme`. The gate shell gets its own injected CSS at publish time for both themes, a 44 px checkbox and a 44 px field.
+- Social card: `social-preview.png` at 1200x630, written from the live numbers (87, 2.1bn, 25.4%, $40.8tn), OG and Twitter tags added, favicon inlined.
+- Verified on the live URL at 412 px: 7 tabs, no overflow, header `TH` above the first `TD`, legend on the surface colour, 4 canvases on Economics, no page errors.
+
 # DashElectrify - devlog
 
 Live: https://electrifysimon.github.io/dashelectrify/ (Staticrypt passphrase `electrify`).
