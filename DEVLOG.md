@@ -1,3 +1,11 @@
+## 2026-11-28 - Phone nav pass three
+
+- The wrapped tab strip was still 129 px on an 839 px screen. Below 560 px the strip is replaced by a native view picker ("Choose a view") and the download icon, so the bar is 53 px and every view is reachable with one tap. The seven buttons stay in the DOM for desktop and for anyone on a wider phone.
+- Toast moved to the top of the content, under the bar, so the download confirmation stops landing on the map.
+- Chart legends: `plain` under five series, `scroll` above it, smaller type under 760 px. The WETO pager arrows only appear when there is something to page.
+- National Plans: cells wrap instead of clipping, plan column widened. The panel still needs a stacked layout at phone width; the intro paragraph is clipped by its scroll container.
+- Verified live at 412 px: bar 53 px, picker visible, 7 views in the DOM, switching to Plans hides the map block, no page errors.
+
 ## 2026-11-24 - Background depth, download, table polish
 
 - Shipped an animated contour field on `#bgfx` (40 polylines, three summed sines, accent at 4 to 11 per cent alpha, 30fps, stops on `visibilitychange`, single static draw under reduced motion), plus a two-stop accent glow behind the masthead and a mask that fades the field out by 88 per cent down the page. The canvas had existed since the shell was copied but nothing ever drew on it, which is why the page read as a flat navy fill.
