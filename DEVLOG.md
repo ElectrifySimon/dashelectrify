@@ -3,7 +3,7 @@
 - The wrapped tab strip was still 129 px on an 839 px screen. Below 560 px the strip is replaced by a native view picker ("Choose a view") and the download icon, so the bar is 53 px and every view is reachable with one tap. The seven buttons stay in the DOM for desktop and for anyone on a wider phone.
 - Toast moved to the top of the content, under the bar, so the download confirmation stops landing on the map.
 - Chart legends: `plain` under five series, `scroll` above it, smaller type under 760 px. The WETO pager arrows only appear when there is something to page.
-- National Plans: cells wrap instead of clipping, plan column widened. The panel still needs a stacked layout at phone width; the intro paragraph is clipped by its scroll container.
+- National Plans: below 560 px each plan is a card, label on the left and value on the right, built from `data-label` on every cell. The panel's intro is a table `caption`, which inherited `white-space: nowrap` and forced a 721 px table inside a 392 px screen; it now wraps at 100% width. Measured on the live page: no horizontal scroll in the panel, caption 392 px.
 - Verified live at 412 px: bar 53 px, picker visible, 7 views in the DOM, switching to Plans hides the map block, no page errors.
 
 ## 2026-11-24 - Background depth, download, table polish
